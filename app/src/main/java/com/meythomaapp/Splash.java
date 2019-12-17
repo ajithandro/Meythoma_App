@@ -92,6 +92,9 @@ public class Splash extends AppCompatActivity {
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 if (response.equals("1")) {
+                    db=openOrCreateDatabase("Kalil.db",MODE_PRIVATE,null);
+                    db.execSQL("insert into Tables values('" + response + "');");
+                    db.close();
                     Intent intent = new Intent(Splash.this, HomeActivity.class);
                     startActivity(intent);
                     Toast.makeText(Splash.this, "Login Success...", Toast.LENGTH_SHORT).show();
