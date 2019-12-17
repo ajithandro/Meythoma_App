@@ -124,29 +124,22 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_add_new_user) {
             // Handle the camera action
-            fragmentManager.beginTransaction().replace(R.id.frame,new Soon()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame,new AddCustomer()).commit();
         } else if (id == R.id.nav_add_area) {
             // Handle the camera action
-            fragmentManager.beginTransaction().replace(R.id.frame,new Soon()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame,new AddAreaActivity()).commit();
         } else if (id == R.id.nav_add_category) {
-//            Intent _mintent = new Intent(HomeActivity.this,Soon.class);
-//            startActivity(_mintent);
+            Intent _mintent = new Intent(HomeActivity.this,AddCategory.class);
+            startActivity(_mintent);
         } else if (id == R.id.nav_new_sale) {
-            SharedPreferences sharedPreferences=getSharedPreferences("prefer",MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putString("k","Fine");
-            editor.commit();
-//            Intent _mintent = new Intent(HomeActivity.this,Soon.class);
-//            startActivity(_mintent);
+            Intent _mintent = new Intent(HomeActivity.this,NewSalesActivity.class);
+            startActivity(_mintent);
         } else if (id == R.id.nav_visited_entry) {
-            fragmentManager.beginTransaction().replace(R.id.frame,new Soon()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame,new VisitedEntryActivity()).commit();
         } else if (id == R.id.nav_update_delivery_details) {
             fragmentManager.beginTransaction().replace(R.id.frame,new Soon()).commit();
         }  else if (id == R.id.nav_logout) {
-            sharedPreferences = getSharedPreferences("status", MODE_PRIVATE);
-            editor = sharedPreferences.edit();
-            editor.putString("status","fine");
-            editor.commit();
+
            finishAffinity();
         }
 

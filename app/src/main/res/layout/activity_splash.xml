@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/lay"
     android:background="#FFFF"
     android:gravity="center"
     tools:context=".Splash">
@@ -26,7 +27,7 @@
         android:content="@+id/content"
         android:handle="@+id/handle"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:rotation="90">
 
         <!-- Button for the handle of SlidingDrawer -->
@@ -51,9 +52,10 @@
 
             <!-- DEFINE ALL YOUR CONTENT,WIDGETS HERE WHICH YOU WANT TO ADD IN SLIDING DRAWER LAYOUT. -->
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/meythoma"/>
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/meythoma"
+                android:layout_marginTop="170dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,30 +66,53 @@
 
             <EditText
                 android:id="@+id/usered"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttondesign"
                 android:padding="10dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="25dp"
                 android:hint="Username"/>
 
 
             <EditText
                 android:id="@+id/passed"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttondesign"
                 android:padding="10dp"
+                android:inputType="number"
                 android:layout_marginTop="25dp"
                 android:hint="password"/>
-            <Button
-                android:id="@+id/submit_btn"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape"
-                android:layout_marginTop="25dp"
-                android:textColor="#000000"
-                android:text="Submit"/>
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <Button
+                    android:id="@+id/submit_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape"
+                    android:layout_marginTop="25dp"
+                    android:textColor="#000000"
+                    android:layout_weight="1"
+                    android:text="Submit"/>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:id="@+id/reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape"
+                    android:layout_marginTop="25dp"
+                    android:textColor="#000000"
+                    android:layout_weight="1"
+                    android:text="Reset"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </SlidingDrawer>

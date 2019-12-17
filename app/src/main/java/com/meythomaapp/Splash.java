@@ -3,10 +3,12 @@ package com.meythomaapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,12 +24,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import pl.droidsonroids.gif.GifImageView;
 
 public class Splash extends AppCompatActivity {
 
-    private static final String TAG = "11";
-    private int REQUEST_CODE_ASK_PERMISSIONS;
+
     TextView textView;
     GifImageView gifImageView;
     SQLiteDatabase db;
@@ -45,16 +49,33 @@ public class Splash extends AppCompatActivity {
         passed = (EditText) findViewById(R.id.passed);
         submit = (Button) findViewById(R.id.submit_btn);
         createdDB();
+        db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM Tables", null);
+        if (c.getCount() == 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    textView.performClick();
+                    gifImageView.setVisibility(View.INVISIBLE);
 
-        if (isNetworkAvailable() == true) {
-
-
-            textView.performClick();
-            gifImageView.setVisibility(View.INVISIBLE);
-            Toast.makeText(Splash.this, "Enter the username and password to login...", Toast.LENGTH_SHORT).show();
-
+                }
+            },2000);
 
         } else {
+
+            while (c.moveToNext()) {
+                if (c.getString(0).equals("1")) {
+
+                    getArea();
+                    customerlist();
+                    Intent intent = new Intent(Splash.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+        }
+        if (isNetworkAvailable() == false) {
             Toast.makeText(this, "plzz check the internet connection...", Toast.LENGTH_SHORT).show();
             finishAffinity();
         }
@@ -71,6 +92,8 @@ public class Splash extends AppCompatActivity {
                     progressDialog = new ProgressDialog(Splash.this);
                     progressDialog.setMessage("Log in...");
                     progressDialog.show();
+                    getArea();
+                    customerlist();
                     loginattempt(usered.getText().toString(), passed.getText().toString());
                 }
             }
@@ -87,16 +110,17 @@ public class Splash extends AppCompatActivity {
 
     void loginattempt(String username, String password) {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfigClass.loginURL + "?user=" + username + "&pass=" + password, new Response.Listener<String>() {
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, AppConfigClass.loginURL + "?user=" + password + "&pass=" + username, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 if (response.equals("1")) {
-                    db=openOrCreateDatabase("Kalil.db",MODE_PRIVATE,null);
+                    db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
                     db.execSQL("insert into Tables values('" + response + "');");
                     db.close();
                     Intent intent = new Intent(Splash.this, HomeActivity.class);
                     startActivity(intent);
+                    finish();
                     Toast.makeText(Splash.this, "Login Success...", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(Splash.this, "Incorrect Details", Toast.LENGTH_SHORT).show();
@@ -109,7 +133,7 @@ public class Splash extends AppCompatActivity {
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(Splash.this);
-        requestQueue.add(stringRequest);
+        requestQueue.add(stringRequest1);
 
 
     }
@@ -119,5 +143,81 @@ public class Splash extends AppCompatActivity {
         db.execSQL("create table if not exists Tables(status TEXT);");
         Toast.makeText(getApplicationContext(), "Database Created Successfully", Toast.LENGTH_SHORT).show();
         db.close();
+    }
+
+    void getArea() {
+        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, AppConfigClass.getAreaListURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Constants.areasListAl.clear();
+                    Constants.areasIdListAl.clear();
+                    Constants.areasListAlMap.clear();
+                    JSONObject jsonObject1 = new JSONObject(response);
+                    JSONArray jsonArray1 = jsonObject1.getJSONArray("project_details");
+                    for (int i = 0; i < jsonArray1.length(); i++) {
+                        JSONObject jsObj = jsonArray1.getJSONObject(i);
+                        String itemType = jsObj.getString("type");
+
+                        if (itemType.equalsIgnoreCase("Area")) {
+                            String cId = jsObj.getString("id");
+                            String name = jsObj.getString("name");
+                            Constants.areasIdListAl.add(cId);
+                            Constants.areasListAlMap.put(cId, name);
+                            Constants.areasListAl.add(name);
+                        }
+                    }
+
+                } catch (Exception e) {
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
+        RequestQueue requestQueue2 = Volley.newRequestQueue(Splash.this);
+        requestQueue2.add(stringRequest2);
+
+    }
+    void customerlist(){
+        StringRequest stringRequest3 = new StringRequest(Request.Method.GET, AppConfigClass.getCustomerURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    Constants.customerListAl.clear();
+                    Constants.customerIdListAl.clear();
+                    Constants.customerJsonObjListMap.clear();
+                    JSONObject jsonObject1 = new JSONObject(response);
+                    JSONArray jsonArray1 = jsonObject1.getJSONArray("project_details");
+                    for (int i = 0; i < jsonArray1.length(); i++) {
+                        JSONObject jsObj = jsonArray1.getJSONObject(i);
+                        String cId = jsObj.getString("customer_id");
+                        String name = jsObj.getString("company_name");
+                        Constants.customerJsonObjListMap.put(name,jsObj);
+                        Constants.customerIdListAl.add(cId);
+                        Constants.customerListAl.add(name);
+                    }
+
+                } catch (Exception e) {
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
+        RequestQueue requestQueue3 = Volley.newRequestQueue(Splash.this);
+        requestQueue3.add(stringRequest3);
+
     }
 }

@@ -144,8 +144,8 @@ public class NewSalesActivity extends AppCompatActivity {
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
                         parent);
-                v.setBackgroundColor(Color.parseColor("#3F51B5"));
-                ((TextView) v).setTextColor(Color.parseColor("#ffffff"));
+                v.setBackgroundColor(Color.parseColor("#8BC34A"));
+                ((TextView) v).setTextColor(Color.parseColor("#000000"));
 
                 return v;
             }
@@ -446,8 +446,8 @@ public class NewSalesActivity extends AppCompatActivity {
                                         ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
                         parent);
-                v.setBackgroundColor(Color.parseColor("#3F51B5"));
-                ((TextView) v).setTextColor(Color.parseColor("#ffffff"));
+                v.setBackgroundColor(Color.parseColor("#8BC34A"));
+                ((TextView) v).setTextColor(Color.parseColor("#000000"));
                 return v;
             }
         };
@@ -546,8 +546,8 @@ public class NewSalesActivity extends AppCompatActivity {
                                                 ViewGroup parent) {
                         View v = super.getDropDownView(position, convertView,
                                 parent);
-                        v.setBackgroundColor(Color.parseColor("#3F51B5"));
-                        ((TextView) v).setTextColor(Color.parseColor("#ffffff"));
+                        v.setBackgroundColor(Color.parseColor("#8BC34A"));
+                        ((TextView) v).setTextColor(Color.parseColor("#000000"));
                         return v;
                     }
                 };
