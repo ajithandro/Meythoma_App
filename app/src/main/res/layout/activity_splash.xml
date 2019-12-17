@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFF"
+    android:gravity="center"
+    tools:context=".Splash">
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gif"
+        android:layout_width="130dp"
+        android:layout_height="100dp"
+        android:background="@drawable/spinners"
+        android:layout_centerInParent="true"/>
+
+
+
+
+    <SlidingDrawer
+        android:id="@+id/simpleSlidingDrawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:content="@+id/content"
+        android:handle="@+id/handle"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:rotation="90">
+
+        <!-- Button for the handle of SlidingDrawer -->
+        <TextView
+            android:id="@id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="270"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <!-- layout for the content of the SLidingDrawer -->
+        <LinearLayout
+            android:id="@id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="40dp"
+            android:rotation="270">
+
+            <!-- DEFINE ALL YOUR CONTENT,WIDGETS HERE WHICH YOU WANT TO ADD IN SLIDING DRAWER LAYOUT. -->
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/meythoma"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:text="Login Here"/>
+
+            <EditText
+                android:id="@+id/usered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttondesign"
+                android:padding="10dp"
+                android:layout_marginTop="50dp"
+                android:hint="Username"/>
+
+
+            <EditText
+                android:id="@+id/passed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttondesign"
+                android:padding="10dp"
+                android:layout_marginTop="25dp"
+                android:hint="password"/>
+            <Button
+                android:id="@+id/submit_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape"
+                android:layout_marginTop="25dp"
+                android:textColor="#000000"
+                android:text="Submit"/>
+
+        </LinearLayout>
+    </SlidingDrawer>
+
+</RelativeLayout>

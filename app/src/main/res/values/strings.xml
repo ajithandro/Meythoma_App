@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">MeythomaApp</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_uname">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Next</string>
+    <string name="action_sign_in_short">Next</string>
+    <string name="error_invalid_login">Username or Password is invalid</string>
+    <string name="error_invalid_username">This Username is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_home">Meythoma Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="gst_yes">YES</string>
+    <string name="gst_no">NO</string>
+
+    <string name="area_spinner_title">Select Area</string>
+    <string name="added_by_spinner_title">Select Added By</string>
+    <string name="sales_person_spinner_title">Sales Person</string>
+</resources>

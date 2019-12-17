@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#43A047</color>
+    <color name="colorPrimaryDark">#327C36</color>
+    <color name="colorAccent">#43A047</color>
+
+    <color name="gray_background">#757575</color>
+    <color name="yellow">#FFBB33</color>
+
+    <color name="white">#FFFFFF</color>
+    <drawable name="black">#000000</drawable>
+
+    <color name="pop_up_bg">#2f363c</color>
+    <color name="pop_up_btn_nor">#3a4149</color>
+    <color name="pop_up_btn_foc">#01a8df</color>
+    <color name="blue_gray">#98AFC7</color>
+    <color name="corn_yellow">#FFF380</color>
+</resources>

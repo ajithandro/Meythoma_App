@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingTop="60dp"
+    android:paddingBottom="1dp"
+    android:paddingRight="1dp"
+    android:paddingLeft="1dp"
+    tools:context=".Today_Payment">
+
+
+
+
+    <LinearLayout
+        android:id="@+id/paylin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/empty"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"
+            android:text="No Records available"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/payorder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lin9"
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+
+    <!-- Button for the handle of SlidingDrawer -->
+
+
+
+
+    <!-- DEFINE ALL YOUR CONTENT,WIDGETS HERE WHICH YOU WANT TO ADD IN SLIDING DRAWER LAYOUT. -->
+
+    <LinearLayout
+        android:id="@+id/lin9"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2">
+        <Button
+            android:id="@+id/paygstbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape"
+            android:textColor="#000000"
+            android:layout_marginRight="5dp"
+            android:typeface="monospace"
+            android:textStyle="bold"
+            android:text="With GST"/>
+        <Button
+            android:id="@+id/paynongstbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:text="Without GST"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
