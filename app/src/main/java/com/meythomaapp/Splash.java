@@ -36,8 +36,7 @@ public class Splash extends AppCompatActivity {
     GifImageView gifImageView;
     SQLiteDatabase db;
     EditText usered, passed;
-    Button submit;
-    ProgressDialog progressDialog;
+    Button submit,reset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,15 @@ public class Splash extends AppCompatActivity {
         usered = (EditText) findViewById(R.id.usered);
         passed = (EditText) findViewById(R.id.passed);
         submit = (Button) findViewById(R.id.submit_btn);
+        reset = (Button)findViewById(R.id.reset);
         createdDB();
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usered.setText("");
+                passed.setText("");
+            }
+        });
         db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
         Cursor c = db.rawQuery("SELECT * FROM Tables", null);
         if (c.getCount() == 0) {
@@ -71,6 +78,7 @@ public class Splash extends AppCompatActivity {
                     Intent intent = new Intent(Splash.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
+
                 }
             }
 
@@ -89,9 +97,7 @@ public class Splash extends AppCompatActivity {
                 } else if (passed.getText().toString().isEmpty()) {
                     usered.setError("Enter valid password");
                 } else {
-                    progressDialog = new ProgressDialog(Splash.this);
-                    progressDialog.setMessage("Log in...");
-                    progressDialog.show();
+
                     getArea();
                     customerlist();
                     loginattempt(usered.getText().toString(), passed.getText().toString());
@@ -113,7 +119,7 @@ public class Splash extends AppCompatActivity {
         StringRequest stringRequest1 = new StringRequest(Request.Method.POST, AppConfigClass.loginURL + "?user=" + password + "&pass=" + username, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progressDialog.dismiss();
+
                 if (response.equals("1")) {
                     db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
                     db.execSQL("insert into Tables values('" + response + "');");

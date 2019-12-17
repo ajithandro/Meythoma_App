@@ -2,16 +2,13 @@ package com.meythomaapp;
 
 
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +21,12 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -43,12 +46,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 
-
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHolder> {
 
     Context context;
-
-    ArrayList buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
+    ProgressDialog progressDialog;
+    OrdersAdapter ordersAdapter;
+    ArrayList order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
     Paragraph paragraph1;
     String company_name, buyer_address, order_date, invoive_no, totalcoast, outpath;
     private File pdfFile;
@@ -61,8 +64,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             " six", " seven", " eight", " nine", " ten", " eleven", " twelve", " thirteen",
             " fourteen", " fifteen", " sixteen", " seventeen", " eighteen", " nineteen"};
 
-    public OrdersAdapter(Context context, ArrayList buyerad, ArrayList orderDate, ArrayList deliveryDate, ArrayList billno, ArrayList companyName, ArrayList productDetails, ArrayList totalAmount, ArrayList gstamt, ArrayList ordertakenby, ArrayList totalamt, ArrayList kgdetails, ArrayList orderstatus, ArrayList paymentstatus, ArrayList paybalance) {
+    public OrdersAdapter(Context context, ArrayList order_id, ArrayList buyerad, ArrayList orderDate, ArrayList deliveryDate, ArrayList billno, ArrayList companyName, ArrayList productDetails, ArrayList totalAmount, ArrayList gstamt, ArrayList ordertakenby, ArrayList totalamt, ArrayList kgdetails, ArrayList orderstatus, ArrayList paymentstatus, ArrayList paybalance) {
         this.context = context;
+        this.order_id = order_id;
         this.buyerad = buyerad;
         this.orderDate = orderDate;
         this.deliveryDate = deliveryDate;
@@ -119,12 +123,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 //
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
-                        String sharebody = "Meythoma International"+"\n"+"Order Date : " + orderDate.get(position).toString() + "\n" +
+                        String sharebody = "Meythoma International" + "\n" + "Order Date : " + orderDate.get(position).toString() + "\n" +
                                 "Delivery : " + deliveryDate.get(position).toString() + "\n" +
                                 "Order NO : " + billno.get(position).toString() + "\n" +
                                 "Shop : " + companyName.get(position).toString() + "\n" +
-                                "Product Details : " + productDetails.get(position).toString()+"/" + kgdetails.get(position).toString() +"/" + totalAmount.get(position).toString() + "/" +"\n"+"GST : "  + gstamt.get(position).toString() + "\n" +
-                                "Total Amount : "+ totalamt.get(position).toString() +"\n"+
+                                "Product Details : " + productDetails.get(position).toString() + "/" + kgdetails.get(position).toString() + "/" + totalAmount.get(position).toString() + "/" + "\n" + "GST : " + gstamt.get(position).toString() + "\n" +
+                                "Total Amount : " + totalamt.get(position).toString() + "\n" +
                                 "Order by : " + ordertakenby.get(position).toString();
 
 
@@ -146,6 +150,39 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
             }
         });
+        holder.updateorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Updated Order Status");
+                builder.setMessage("update this order status to Delivered");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Delivered", new DialogInterface.OnClickListener() {
+
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progressDialog = new ProgressDialog(context);
+                        progressDialog.setMessage("Status Updating...");
+                        progressDialog.show();
+                        updateorderstatus("Delivered", order_id.get(position).toString());
+
+
+                    }
+                });
+                builder.setNegativeButton("not Delivered", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            }
+        });
+
+
         holder.pdfreport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,7 +234,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView ordertext, deliverytext, billtext, cnametext, producttext, totaltext, gsttext, ordertakentext, totalamt, kg, ostatus, paystatus, paybal;
-        ImageView shareicon, pdfreport;
+        ImageView shareicon, pdfreport, updateorder;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -216,6 +253,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             paystatus = (TextView) itemView.findViewById(R.id.paystatus);
             paybal = (TextView) itemView.findViewById(R.id.paybal);
             pdfreport = (ImageView) itemView.findViewById(R.id.pdfreport);
+            updateorder = (ImageView) itemView.findViewById(R.id.dele);
 
         }
     }
@@ -247,7 +285,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             table.setWidthPercentage(100);
             table.setTotalWidth(575);
 
-            PdfPCell c1 = new PdfPCell(new Phrase(" Buyer : " + company_name + "\n" +" "+ buyer_address, FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK)));
+            PdfPCell c1 = new PdfPCell(new Phrase(" Buyer : " + company_name + "\n" + " " + buyer_address, FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK)));
             c1.setColspan(7);
             c1.setFixedHeight(50f);
             table.addCell(c1);
@@ -289,7 +327,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 c8.setFixedHeight(20f);
                 c8.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(c8);
-                PdfPCell c9 = new PdfPCell(new Phrase("   "+productdata[i].trim(), FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));
+                PdfPCell c9 = new PdfPCell(new Phrase("   " + productdata[i].trim(), FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));
                 c9.setColspan(4);
                 c9.setFixedHeight(20f);
                 table.addCell(c9);
@@ -304,7 +342,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 c11.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(c11);
                 totalcost = Integer.parseInt(kgdata[j].trim()) * Integer.parseInt(pricedata[k].trim());
-                PdfPCell c12 = new PdfPCell(new Phrase("Rs. "+String.valueOf(totalcost), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+                PdfPCell c12 = new PdfPCell(new Phrase("Rs. " + String.valueOf(totalcost), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
                 c12.setColspan(2);
                 c12.setHorizontalAlignment(Element.ALIGN_CENTER);
                 c12.setFixedHeight(20f);
@@ -312,7 +350,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
 
             }
-            PdfPCell c13 = new PdfPCell(new Phrase(" Amount Chargable (in words)" + "\n" + "\n" +" " + Currency.convertToIndianCurrency(totalcoast), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+            PdfPCell c13 = new PdfPCell(new Phrase(" Amount Chargable (in words)" + "\n" + "\n" + " " + Currency.convertToIndianCurrency(totalcoast), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
             c13.setColspan(6);
             c13.setFixedHeight(40f);
             table.addCell(c13);
@@ -351,7 +389,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             table2.setWidthPercentage(100);
             table2.setTotalWidth(575);
 
-            PdfPCell d1 = new PdfPCell(new Phrase(" Buyer : " + company_name + "\n"  +" "+ buyer_address, FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK)));
+            PdfPCell d1 = new PdfPCell(new Phrase(" Buyer : " + company_name + "\n" + " " + buyer_address, FontFactory.getFont(FontFactory.TIMES_BOLD, 14, BaseColor.BLACK)));
             d1.setColspan(07);
             d1.setFixedHeight(50f);
             table2.addCell(d1);
@@ -390,7 +428,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 d8.setFixedHeight(20f);
                 d8.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table2.addCell(d8);
-                PdfPCell d9 = new PdfPCell(new Phrase("   "+productdata[i].trim(), FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));
+                PdfPCell d9 = new PdfPCell(new Phrase("   " + productdata[i].trim(), FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));
                 d9.setColspan(4);
                 d9.setFixedHeight(20f);
                 table2.addCell(d9);
@@ -405,7 +443,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 d11.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table2.addCell(d11);
                 totalcost = Integer.parseInt(kgdata[j].trim()) * Integer.parseInt(pricedata[k].trim());
-                PdfPCell d12 = new PdfPCell(new Phrase("Rs. "+String.valueOf(totalcost), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+                PdfPCell d12 = new PdfPCell(new Phrase("Rs. " + String.valueOf(totalcost), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
                 d12.setColspan(2);
                 d12.setHorizontalAlignment(Element.ALIGN_CENTER);
                 d12.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -414,7 +452,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
             }
 
-            PdfPCell d13 = new PdfPCell(new Phrase(" Amount Chargable (in words)" + "\n" + "\n"  +" "+ Currency.convertToIndianCurrency(totalcoast), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+            PdfPCell d13 = new PdfPCell(new Phrase(" Amount Chargable (in words)" + "\n" + "\n" + " " + Currency.convertToIndianCurrency(totalcoast), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
             d13.setColspan(6);
             d13.setFixedHeight(40f);
             table2.addCell(d13);
@@ -456,9 +494,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     }
 
-    void preview(){
+    void preview() {
 
-        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",pdfFile);
+        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", pdfFile);
 
         Intent share = new Intent();
         share.setAction(Intent.ACTION_SEND);
@@ -467,5 +505,26 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         share.setPackage("com.whatsapp.w4b");
 
         context.startActivity(share);
+    }
+
+    void updateorderstatus(final String status, final String orderid) {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfigClass.updatestatusurl + "?status=" + status + "&oid=" + orderid, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                progressDialog.dismiss();
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+
     }
 }

@@ -5,14 +5,12 @@ import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +33,7 @@ public class GifActivity extends Fragment {
     View view;
     RecyclerView listorder;
     ProgressDialog progressDialog;
-    ArrayList buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
+    ArrayList order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
     StringBuilder stringproduct, stringvol, stringrate, totalstring;
     float sumproduct, gstval, sumtotal = 0;
     LinearLayout giflin;
@@ -53,6 +51,7 @@ public class GifActivity extends Fragment {
         giflin.setVisibility(View.INVISIBLE);
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Upcoming Orders");
         progressDialog = new ProgressDialog(getActivity());
+        order_id = new ArrayList();
         buyerad = new ArrayList();
         orderDate = new ArrayList();
         deliveryDate = new ArrayList();
@@ -69,31 +68,8 @@ public class GifActivity extends Fragment {
         paybalance = new ArrayList();
         showprogress();
         getvalues("nongst");
-        listorder.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
 
-                upgst.setVisibility(View.VISIBLE);
-                upnongst.setVisibility(View.VISIBLE);
-                return false;
-            }
-        });
-        listorder.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                upgst.setVisibility(View.VISIBLE);
-                upnongst.setVisibility(View.VISIBLE);
 
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                upgst.setVisibility(View.INVISIBLE);
-                upnongst.setVisibility(View.INVISIBLE);
-            }
-        });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
 
@@ -126,7 +102,7 @@ public class GifActivity extends Fragment {
     }
 
     void getvalues(final String status) {
-
+        order_id.clear();
         buyerad.clear();
         orderDate.clear();
         deliveryDate.clear();
@@ -161,6 +137,7 @@ public class GifActivity extends Fragment {
                         }
                         companyName.add(obj.getString("company_name"));
                         buyerad.add(obj.getString("company_address"));
+                        order_id.add(obj.getString("order_id"));
                         ordertakenby.add(obj.getString("created_by"));
                         orderstatus.add(obj.getString("order_status"));
                         paymentstatus.add("Waiting");
@@ -217,7 +194,7 @@ public class GifActivity extends Fragment {
                         }
                         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
                         listorder.setLayoutManager(linearLayoutManagertwo);
-                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
+                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(),order_id,buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
                         listorder.setAdapter(ordersAdapter);
                     }
 

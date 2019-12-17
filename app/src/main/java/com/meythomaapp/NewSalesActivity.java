@@ -458,6 +458,14 @@ public class NewSalesActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
+
+
+
     private void setGtotalAmt() {
         int tot = 0;
         for (CartBean cb : AppConfigClass.cardBeanAl) {

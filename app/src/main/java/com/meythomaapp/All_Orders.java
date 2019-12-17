@@ -39,7 +39,7 @@ public class All_Orders extends Fragment {
     ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    ArrayList buyerad,orderDate, deliveryDate, billno, companyName, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
+    ArrayList order_id,buyerad,orderDate, deliveryDate, billno, companyName, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
     ArrayList productDetails, product;
     StringBuilder stringproduct, stringvol, stringrate, totalstring;
     float sumproduct, gstval, sumtotal = 0;
@@ -59,6 +59,7 @@ public class All_Orders extends Fragment {
         listorder = (RecyclerView) view.findViewById(R.id.allorderlist);
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("All Orders");
         progressDialog = new ProgressDialog(getActivity());
+        order_id=new ArrayList();
         buyerad=new ArrayList();
         orderDate = new ArrayList();
         deliveryDate = new ArrayList();
@@ -135,6 +136,7 @@ public class All_Orders extends Fragment {
     }
 
     void getvalues(final String type) {
+        order_id.clear();
         orderDate.clear();
         deliveryDate.clear();
         billno.clear();
@@ -173,6 +175,7 @@ public class All_Orders extends Fragment {
                         companyName.add(obj.getString("company_name"));
                         ordertakenby.add(obj.getString("created_by"));
                         orderstatus.add(obj.getString("order_status"));
+                        order_id.add(obj.getString("order_id"));
                         buyerad.add(obj.getString("company_address"));
                         if (obj.getString("status").equals("10")) {
                             paymentstatus.add("Completed");
@@ -246,7 +249,7 @@ public class All_Orders extends Fragment {
 
                         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
                         listorder.setLayoutManager(linearLayoutManagertwo);
-                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), buyerad,orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
+                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), order_id,buyerad,orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
                         listorder.setAdapter(ordersAdapter);
                     }
 
@@ -275,6 +278,7 @@ public class All_Orders extends Fragment {
 
     void getcompany(final String statusdata,final  String type ) {
         orderDate.clear();
+        order_id.clear();
         deliveryDate.clear();
         billno.clear();
         productDetails.clear();
@@ -312,6 +316,7 @@ public class All_Orders extends Fragment {
                         }
                         companyName.add(obj.getString("company_name"));
                         ordertakenby.add(obj.getString("created_by"));
+                        order_id.add(obj.getString("order_id"));
                         orderstatus.add(obj.getString("order_status"));
                         buyerad.add(obj.getString("company_address"));
                         if (obj.getString("status").equals("10")) {
@@ -386,7 +391,7 @@ public class All_Orders extends Fragment {
 
                         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
                         listorder.setLayoutManager(linearLayoutManagertwo);
-                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), buyerad,orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
+                        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(),order_id, buyerad,orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
                         listorder.setAdapter(ordersAdapter);
                     }
                     progressDialog.dismiss();

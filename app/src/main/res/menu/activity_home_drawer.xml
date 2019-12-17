@@ -17,7 +17,7 @@
         <item
             android:id="@+id/nav_payment"
             android:icon="@drawable/payment"
-            android:title="Generate Invoice" />
+            android:title="Today Payment" />
         <item
             android:id="@+id/nav_new_sale"
             android:icon="@drawable/new_sales"
