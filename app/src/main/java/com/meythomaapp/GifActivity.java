@@ -10,26 +10,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 public class GifActivity extends Fragment {
-
     View view;
     RecyclerView listorder;
     ProgressDialog progressDialog;
@@ -39,7 +33,6 @@ public class GifActivity extends Fragment {
     LinearLayout giflin;
     Button upgst, upnongst;
     private int REQUEST_CODE_ASK_PERMISSIONS;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -68,43 +61,32 @@ public class GifActivity extends Fragment {
         paybalance = new ArrayList();
         showprogress();
         getvalues("nongst");
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
-
-
                 if (Build.VERSION.SDK_INT >= 24) {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
                 }
-
             }
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
-
         }
-
-
         upgst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showprogress();
                 getvalues("gst");
             }
         });
         upnongst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showprogress();
                 getvalues("nongst");
             }
         });
         return view;
     }
-
     void getvalues(final String status) {
-        order_id.clear();
-        buyerad.clear();
+        showprogress();
         orderDate.clear();
+        order_id.clear();
         deliveryDate.clear();
         billno.clear();
         productDetails.clear();
@@ -112,6 +94,7 @@ public class GifActivity extends Fragment {
         companyName.clear();
         ordertakenby.clear();
         totalamt.clear();
+        buyerad.clear();
         totalAmount.clear();
         orderstatus.clear();
         kgdetails.clear();
@@ -122,7 +105,6 @@ public class GifActivity extends Fragment {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-
                 try {
                     JSONObject jsonObject1 = new JSONObject(response);
                     JSONArray jsonArray1 = jsonObject1.getJSONArray("project_details");
@@ -195,9 +177,9 @@ public class GifActivity extends Fragment {
                         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
                         listorder.setLayoutManager(linearLayoutManagertwo);
                         OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(),order_id,buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
+                        ordersAdapter.notifyDataSetChanged();
                         listorder.setAdapter(ordersAdapter);
                     }
-
                     Toast.makeText(getActivity(), "Total Record's : " + billno.size(), Toast.LENGTH_SHORT).show();
                     if (billno.size() == 0) {
                         giflin.setVisibility(View.VISIBLE);
@@ -208,8 +190,6 @@ public class GifActivity extends Fragment {
                     }
                 } catch (Exception e) {
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -218,15 +198,10 @@ public class GifActivity extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
-
-
     }
-
     void showprogress() {
-
         progressDialog.setMessage("Fetching Upcoming Order's List..");
+        progressDialog.setCancelable(false);
         progressDialog.show();
-
     }
-
 }

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import java.util.ArrayList;
 
 import java.util.ArrayList;
 
@@ -34,6 +33,7 @@ public class CartAdapterNew extends BaseAdapter {
     public int getViewTypeCount() {
         return getCount();
     }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -74,9 +74,9 @@ public class CartAdapterNew extends BaseAdapter {
 
 
             convertView.setTag(holder);
-        }else {
+        } else {
             // the getTag returns the viewHolder object set as a tag to the view
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.itmType.setText(dataModel.getProduType());

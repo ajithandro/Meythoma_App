@@ -22,7 +22,6 @@ public class Constants {
     public static Map<String, JSONObject> customerJsonObjListMap = new HashMap<String, JSONObject>();
     public static Map<String, JSONObject> userJsonObjListMap = new HashMap<String, JSONObject>();
     public static Map<String, String> areasListAlMap = new HashMap<String, String>();
-
     public  static boolean DEBUGGING=true;
     public  static final  String PUBLIC_PREFERENCE="public";
     public  static final  String PRIVATE_PREFERENCE="private";
