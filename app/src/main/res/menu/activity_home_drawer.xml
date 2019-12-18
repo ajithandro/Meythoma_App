@@ -3,20 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        >
         <item
             android:id="@+id/homepage"
-            android:icon="@drawable/cart"
+            android:icon="@drawable/payment_report"
             android:title="UpComing" />
 
         <item
             android:id="@+id/alloders"
-            android:icon="@drawable/cart"
+            android:icon="@drawable/new_sales1"
             android:title="View All" />
 
         <item
             android:id="@+id/nav_payment"
-            android:icon="@drawable/payment"
+            android:icon="@drawable/generate_invoice"
             android:title="Today Payment" />
         <item
             android:id="@+id/nav_new_sale"

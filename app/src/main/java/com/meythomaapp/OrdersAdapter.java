@@ -106,6 +106,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         holder.gsttext.setText("GST : ₹ " + gstamt.get(position).toString().trim());
         holder.paystatus.setText("Payment Status : " + paymentstatus.get(position).toString().trim());
         holder.paybal.setText("Balance : ₹ " + paybalance.get(position).toString().trim());
+        if (orderstatus.get(position).toString().trim().equals("Delivered")) {
+           holder.updateorder.setVisibility(View.INVISIBLE);
+        }
         holder.shareicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,10 +165,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        progressDialog = new ProgressDialog(context);
-                        progressDialog.setMessage("Status Updating...");
-                        progressDialog.show();
-                        updateorderstatus("Delivered", order_id.get(position).toString());
+//                        progressDialog = new ProgressDialog(context);
+//                        progressDialog.setMessage("Status Updating...");
+//                        progressDialog.show();
+//                        updateorderstatus("Delivered", order_id.get(position).toString());
 
 
                     }
@@ -502,8 +505,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         share.setAction(Intent.ACTION_SEND);
         share.setType("application/pdf");
         share.putExtra(Intent.EXTRA_STREAM, uri);
-        share.setPackage("com.whatsapp.w4b");
-
         context.startActivity(share);
     }
 
@@ -514,7 +515,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             public void onResponse(String s) {
                 progressDialog.dismiss();
                 Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
-                
+
 
             }
         }, new Response.ErrorListener() {

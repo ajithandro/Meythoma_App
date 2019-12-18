@@ -9,11 +9,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,7 +31,16 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,18 +55,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
 public class NewSalesActivity extends AppCompatActivity {
-
     private GetCategoryTask mGetCategoryTask = null;
     private PostNewSalesTask mPostNewSalesTask = null;
     EditText quantity, price_kg, amountEt, amountGst, amountTotal, in_date, et_comments, bill;
@@ -71,7 +75,6 @@ public class NewSalesActivity extends AppCompatActivity {
     static NewSalesActivity conx;
     List<String> CNlist;
     ArrayList<String> jsObjArray = null;
-
     ArrayList<String> catArrayList = new ArrayList<>();
     ArrayList<String> catIdArrayList = new ArrayList<>();
     ArrayAdapter<String> CNSpinnerAdapter;
@@ -83,38 +86,28 @@ public class NewSalesActivity extends AppCompatActivity {
     RadioGroup radioGst;
     RadioButton selectedRadioBtn, radios, radion;
     SharedPreferences sharedPreferences;
-    String cmName, gstYn, proTyp, quan, pric, amount, sgst, samountTotal,billno,ordby;
-    //    int totalAMT = 0;
-//    int totalGST = 0;
+    String cmName, gstYn, proTyp, quan, pric, amount, sgst, samountTotal, billno, ordby;
     int cartCount = 0;
     public static int gTotalAmt = 0;
-
     private ListView lv_cart;
-    //    private ArrayAdapter<String> cart_adapter;
-//    private CartAdapter cart_adapter;
     private CartAdapterNew cart_adapter_new;
     private LinearLayout new_sale_form, cart_view_form;
     private int mYear, mMonth, mDay;
-
     String username;
     String customer_id;
     String delivery_date;
     String salesperson;
     String gst;
     String comments;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_sales);
-
         sharedPreferences = getSharedPreferences("prefer", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         conx = this;
         Toast.makeText(this, sharedPreferences.getString("k", ""), Toast.LENGTH_SHORT).show();
         preferences = new AppPreferences(this);
-
         mnew_progress = findViewById(R.id.new_progress);
         CNlist = new ArrayList<String>();
         view_cart = (ImageView) findViewById(R.id.view_cart);
@@ -127,8 +120,7 @@ public class NewSalesActivity extends AppCompatActivity {
         order_submit_btn = (Button) findViewById(R.id.order_submit_btn);
         bill = (EditText) findViewById(R.id.billno);
         ordertaken = (Spinner) findViewById(R.id.ordertaken);
-        billno=bill.getText().toString();
-
+        billno = bill.getText().toString();
         String[] ordtak = {"-Order By-", "Hussian", "SivaPrkash", "Gowtham", "Vaisul", "Ganesh", "Seenu"};
         final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ordtak) {
             @NonNull
@@ -136,25 +128,19 @@ public class NewSalesActivity extends AppCompatActivity {
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextColor(Color.parseColor("#000000"));
-
                 return v;
             }
-
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
                         parent);
                 v.setBackgroundColor(Color.parseColor("#8BC34A"));
                 ((TextView) v).setTextColor(Color.parseColor("#000000"));
-
                 return v;
             }
         };
-        stringArrayAdapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-
+        stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ordertaken.setAdapter(stringArrayAdapter);
-
         gtotal = (TextView) findViewById(R.id.gtotal);
         gTotalAmt = 0;
         back_to_sale.setOnClickListener(new View.OnClickListener() {
@@ -164,8 +150,6 @@ public class NewSalesActivity extends AppCompatActivity {
                 cart_view_form.setVisibility(View.GONE);
             }
         });
-
-
         if (sharedPreferences.getString("k", "").equals("YES")) {
             radion.setEnabled(false);
         } else if (sharedPreferences.getString("k", "").equals("NO")) {
@@ -177,7 +161,6 @@ public class NewSalesActivity extends AppCompatActivity {
         new_sale_form = (LinearLayout) findViewById(R.id.new_sale_form);
         cart_view_form = (LinearLayout) findViewById(R.id.cart_view_form);
         lv_cart = (ListView) findViewById(R.id.lv_cart);
-
         SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
                         lv_cart,
@@ -194,23 +177,16 @@ public class NewSalesActivity extends AppCompatActivity {
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-
-
                                     //String dcust = String.valueOf(lv_cart.getItemAtPosition(position));
-
                                     String msg = "Are you sure you want to Delete Item from Cart";
                                     showConfirmDialog(msg, position);
                                     /*areasarraylist.remove(position);
                                     area_adapter.notifyDataSetChanged();*/
-
                                 }
-
                             }
                         });
-
         lv_cart.setOnTouchListener(touchListener);
         lv_cart.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
-
         order_submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -218,7 +194,6 @@ public class NewSalesActivity extends AppCompatActivity {
                     showProgress(true);
                     editor.putString("k", "Fine");
                     editor.commit();
-                    Toast.makeText(NewSalesActivity.this, "Updated To Server", Toast.LENGTH_SHORT).show();
                     jsObjArray = new ArrayList<>();
                     jsObjArray.clear();
                     ObjectMapper mapperObj;//= new ObjectMapper();
@@ -227,40 +202,31 @@ public class NewSalesActivity extends AppCompatActivity {
                         String jsonStr = mapperObj.writeValueAsString(cbObj);
                         jsObjArray.add(jsonStr);
                     }
-
                     salesperson = preferences.getStringPreference(conx, Constants.PREFERENCES_SALESPERSON_ID);
                     username = preferences.getStringPreference(conx, Constants.PREFERENCES_SALESPERSON_NAME);
-
                     String visitedCompany = company_name_spinner.getSelectedItem().toString().trim();
-                    ordby= ordertaken.getSelectedItem().toString().trim();
-
+                    ordby = ordertaken.getSelectedItem().toString().trim();
                     int companyIndex = Constants.customerListAl.indexOf(visitedCompany);
                     customer_id = Constants.customerIdListAl.get(companyIndex);
                     comments = et_comments.getText().toString();
                     delivery_date = in_date.getText().toString();
-
                     gst = gstYn;
-
                     Log.e("***********************", jsObjArray.toString());
-                    mPostNewSalesTask = new PostNewSalesTask();
-                    mPostNewSalesTask.execute();
+                    postnewsaletoserver();
                     in_date.setText("");
                     bill.setText("");
                     et_comments.setText("");
-                    Toast.makeText(NewSalesActivity.this,"Updated to Server...", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             back_to_sale.performClick();
                         }
-                    },2000);
+                    }, 2000);
 
                 } catch (Exception e) {
-
                 }
             }
         });
-
         radioGst = (RadioGroup) findViewById(R.id.radioGst);
         quantity = (EditText) findViewById(R.id.quantity);
         price_kg = (EditText) findViewById(R.id.price_kg);
@@ -268,8 +234,6 @@ public class NewSalesActivity extends AppCompatActivity {
         amountGst = (EditText) findViewById(R.id.amountGst);
         amountTotal = (EditText) findViewById(R.id.amountTotal);
         et_comments = (EditText) findViewById(R.id.et_comments);
-
-
         amountEt.setEnabled(false);
         amountGst.setEnabled(false);
         amountTotal.setEnabled(false);
@@ -278,7 +242,6 @@ public class NewSalesActivity extends AppCompatActivity {
         amountEt.setText("0");
         amountGst.setText("0");
         amountTotal.setText("0");
-
         in_date = (EditText) findViewById(R.id.in_date);
         in_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,8 +250,6 @@ public class NewSalesActivity extends AppCompatActivity {
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(conx,
                         new DatePickerDialog.OnDateSetListener() {
 
@@ -298,13 +259,11 @@ public class NewSalesActivity extends AppCompatActivity {
 
 //                                in_date.setText( (monthOfYear + 1) + "/" + dayOfMonth + "/" +  year); //mm/dd/yyy
                                 in_date.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
             }
         });
-
         price_kg.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -374,11 +333,6 @@ public class NewSalesActivity extends AppCompatActivity {
                 amount = amountEt.getText().toString().trim();
                 sgst = amountGst.getText().toString().trim();
                 samountTotal = amountTotal.getText().toString().trim();
-//                int amt = Integer.parseInt(amount);
-//                int gst = Integer.parseInt(sgst);
-//                totalAMT = totalAMT + amt;
-//                totalGST = totalGST + gst;
-
                 cartBean.setCmpnyName(cmName);
                 cartBean.setGstYesNo(gstYn);
                 cartBean.setProduType(proTyp);
@@ -396,18 +350,14 @@ public class NewSalesActivity extends AppCompatActivity {
                 amountTotal.setText("");
                 cartCount++;
                 cart_count.setText("" + cartCount);
-
             }
         });
-
         view_cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                cart_adapter= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
                 if (cart_count.getText().toString().equals("")) {
-
                     Toast.makeText(conx, "Cart is Empty", Toast.LENGTH_SHORT).show();
-
                 } else {
                     setGtotalAmt();
                     cart_adapter_new = new CartAdapterNew(conx, AppConfigClass.cardBeanAl);
@@ -415,14 +365,10 @@ public class NewSalesActivity extends AppCompatActivity {
                     new_sale_form.setVisibility(View.GONE);
                     cart_view_form.setVisibility(View.VISIBLE);
                 }
-
             }
         });
-
         mGetCategoryTask = new GetCategoryTask();
         mGetCategoryTask.execute();
-
-
         CNlist.clear();
         CNlist.add("-Select-");
         Collections.sort(Constants.customerListAl);
@@ -431,17 +377,11 @@ public class NewSalesActivity extends AppCompatActivity {
         }
         CNSpinnerAdapter = new ArrayAdapter<String>
                 (conx, android.R.layout.simple_spinner_item, CNlist) {
-            //By using this method we will define how
-            //the text appears before clicking a spinner
             public View getView(int position, View convertView,
                                 ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
-                //   ((TextView) v).setTextColor(Color.parseColor("#E30D81"));
                 return v;
             }
-
-            //By using this method we will define
-            //how the listview appears after clicking a spinner
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
@@ -454,18 +394,7 @@ public class NewSalesActivity extends AppCompatActivity {
         CNSpinnerAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         company_name_spinner.setAdapter(CNSpinnerAdapter);
-
-
     }
-
-
-
-
-
-
-
-
-
     private void setGtotalAmt() {
         int tot = 0;
         for (CartBean cb : AppConfigClass.cardBeanAl) {
@@ -473,7 +402,6 @@ public class NewSalesActivity extends AppCompatActivity {
         }
         gtotal.setText("" + tot);
     }
-
     private void init() {
 
 //        cart_adapter_new= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
@@ -482,8 +410,6 @@ public class NewSalesActivity extends AppCompatActivity {
         lv_cart.setAdapter(cart_adapter_new);
 
     }
-
-
     public class GetCategoryTask extends AsyncTask<String, Void, String> {
 
 
@@ -577,8 +503,6 @@ public class NewSalesActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
-
-
     public class PostNewSalesTask extends AsyncTask<String, Void, String> {
 
 
@@ -601,13 +525,13 @@ public class NewSalesActivity extends AppCompatActivity {
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 // put the values of id and name in that variable
                 nameValuePairs.add(new BasicNameValuePair("all_arraylist", jsObjArray.toString()));
-                nameValuePairs.add(new BasicNameValuePair("username",ordby));
+                nameValuePairs.add(new BasicNameValuePair("username", ordby));
                 nameValuePairs.add(new BasicNameValuePair("customer_id", customer_id));
                 nameValuePairs.add(new BasicNameValuePair("delivery_date", delivery_date));
                 nameValuePairs.add(new BasicNameValuePair("salesperson", salesperson));
                 nameValuePairs.add(new BasicNameValuePair("gst", gst));
-                nameValuePairs.add(new BasicNameValuePair("bno",billno));
-                nameValuePairs.add(new BasicNameValuePair("orby",ordby));
+                nameValuePairs.add(new BasicNameValuePair("bno", billno));
+                nameValuePairs.add(new BasicNameValuePair("orby", ordby));
                 nameValuePairs.add(new BasicNameValuePair("comments", comments));
 
 
@@ -655,8 +579,6 @@ public class NewSalesActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
-
-
     public String converResponseToString(InputStream InputStream) {
         String mResult = "";
         StringBuilder mStringBuilder;
@@ -675,10 +597,6 @@ public class NewSalesActivity extends AppCompatActivity {
             return mResult;
         }
     }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -703,15 +621,12 @@ public class NewSalesActivity extends AppCompatActivity {
 
         }
     }
-
     private void showToast(String msg) {
         Toast.makeText(conx, msg, Toast.LENGTH_LONG).show();
     }
-
     public TextView conf_tv;
     public Dialog conf_dialog;
     private int delete_position = 0;
-
     public void showConfirmDialog(String msg, final int position) {
 
 
@@ -750,8 +665,6 @@ public class NewSalesActivity extends AppCompatActivity {
         }
 
     }
-
-
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // your code
@@ -765,6 +678,43 @@ public class NewSalesActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+    void postnewsaletoserver() {
+        showProgress(true);
+        String path = "all_arraylist=" + jsObjArray.toString() + "&username=" + ordby + "&customer_id=" + customer_id + "&delivery_date=" + delivery_date + "&salesperson=" + salesperson + "&gst=" + gst + "&bno=" + billno + "&orby=" + ordby + "&comments=" + comments;
+        StringRequest request = new StringRequest(Request.Method.POST, AppConfigClass.newSalesEntryURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                showProgress(false);
+                Toast.makeText(NewSalesActivity.this, s.toString(), Toast.LENGTH_LONG).show();
+                Log.d("retrivedatafromserver",s);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params = new HashMap<String, String>();
+                params.put("all_arraylist", jsObjArray.toString());
+                params.put("username", ordby);
+                params.put("customer_id", customer_id);
+                params.put("delivery_date", delivery_date);
+                params.put("salesperson", salesperson);
+                params.put("gst", gst);
+                params.put("bno", billno);
+                params.put("orby", ordby);
+                params.put("comments", comments);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(request);
+
+
     }
 
 

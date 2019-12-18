@@ -1,6 +1,4 @@
 package com.meythomaapp;
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,30 +12,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import pl.droidsonroids.gif.GifImageView;
-
 public class Splash extends AppCompatActivity {
-
-
     TextView textView;
     GifImageView gifImageView;
     SQLiteDatabase db;
     EditText usered, passed;
     Button submit,reset;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,24 +54,18 @@ public class Splash extends AppCompatActivity {
                 public void run() {
                     textView.performClick();
                     gifImageView.setVisibility(View.INVISIBLE);
-
                 }
             },2000);
-
         } else {
-
             while (c.moveToNext()) {
                 if (c.getString(0).equals("1")) {
-
                     getArea();
                     customerlist();
                     Intent intent = new Intent(Splash.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
             }
-
         }
         if (isNetworkAvailable() == false) {
             Toast.makeText(this, "plzz check the internet connection...", Toast.LENGTH_SHORT).show();
@@ -97,29 +81,23 @@ public class Splash extends AppCompatActivity {
                 } else if (passed.getText().toString().isEmpty()) {
                     usered.setError("Enter valid password");
                 } else {
-
                     getArea();
                     customerlist();
                     loginattempt(usered.getText().toString(), passed.getText().toString());
                 }
             }
         });
-
     }
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
     void loginattempt(String username, String password) {
-
         StringRequest stringRequest1 = new StringRequest(Request.Method.POST, AppConfigClass.loginURL + "?user=" + password + "&pass=" + username, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 if (response.equals("1")) {
                     db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
                     db.execSQL("insert into Tables values('" + response + "');");
@@ -135,13 +113,10 @@ public class Splash extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(Splash.this);
         requestQueue.add(stringRequest1);
-
-
     }
 
     void createdDB() {

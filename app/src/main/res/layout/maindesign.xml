@@ -198,6 +198,7 @@
                         android:weightSum="4"
                         android:gravity="center">
 
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -206,10 +207,10 @@
                             android:gravity="left">
 
                             <ImageView
-                                android:id="@+id/dele"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/delivered" />
+                                android:id="@+id/shareicon"
+                                android:layout_width="40dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/msg" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -219,10 +220,10 @@
                             android:gravity="center">
 
                             <ImageView
-                                android:id="@+id/shareicon"
-                                android:layout_width="40dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/msg" />
+                                android:id="@+id/dele"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/delivered" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
