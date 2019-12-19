@@ -12,6 +12,41 @@
     tools:context=".GifActivity">
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/lin10"
+                    android:weightSum="2"
+                    >
+
+                    <Button
+                        android:id="@+id/upgst"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape"
+                        android:text="With GST"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:typeface="monospace" />
+
+                    <Button
+                        android:id="@+id/upnongst"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:typeface="monospace"
+                        android:text="Without GST"/>
+
+
+
+                </LinearLayout>
 
     <LinearLayout
         android:id="@+id/giflin"
@@ -47,45 +82,6 @@
         >
 
     </androidx.recyclerview.widget.RecyclerView>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/lin10"
-        android:weightSum="2"
-        >
-
-        <Button
-            android:id="@+id/upgst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:text="With GST"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:typeface="monospace" />
-
-        <Button
-            android:id="@+id/upnongst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:typeface="monospace"
-            android:text="Without GST"/>
-
-
-
-    </LinearLayout>
-
-
 
 
 

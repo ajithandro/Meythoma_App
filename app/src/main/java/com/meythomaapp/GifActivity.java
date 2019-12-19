@@ -132,19 +132,19 @@ public class GifActivity extends Fragment {
                             String[] prod = productarray.split(",");
                             for (int k = 0; k < prod.length; k++) {
                                 String[] splitproduct = prod[k].split(":");
-                                stringproduct.append("\n" + splitproduct[0]);
-                                stringrate.append("\n" + splitproduct[1]);
-                                stringvol.append("\n" + splitproduct[2]);
+                                stringproduct.append("\n" + splitproduct[0].trim());
+                                stringrate.append("\n" + splitproduct[1].trim());
+                                stringvol.append("\n" + splitproduct[2].trim());
                                 sumproduct = Float.parseFloat(splitproduct[1]) * Float.parseFloat(splitproduct[2]);
                                 sumtotal = sumtotal + sumproduct;
                             }
                             if (obj.getString("is_tax").equals(1)) {
                                 gstval = (sumtotal * 5) / 100;
-                                gstamt.add(String.valueOf(gstval) + "(yes)");
+                                gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumtotal + gstval;
                                 totalamt.add(String.valueOf(sum));
                             } else {
-                                gstamt.add("0(No)");
+                                gstamt.add("0 (No)");
                                 totalamt.add(String.valueOf(sumtotal));
                             }
                             sumtotal = 0;
@@ -157,17 +157,17 @@ public class GifActivity extends Fragment {
                             stringrate = new StringBuilder();
                             totalstring = new StringBuilder();
                             String[] splitproduct = productarray.split(":");
-                            stringproduct.append("\n" + splitproduct[0]);
-                            stringrate.append("\n" + splitproduct[1]);
-                            stringvol.append("\n" + splitproduct[2]);
+                            stringproduct.append("\n" + splitproduct[0].trim());
+                            stringrate.append("\n" + splitproduct[1].trim());
+                            stringvol.append("\n" + splitproduct[2].trim());
                             sumproduct = Float.parseFloat(splitproduct[1]) * Float.parseFloat(splitproduct[2]);
                             if (obj.getString("is_tax").equals(1)) {
                                 gstval = (sumproduct * 5) / 100;
-                                gstamt.add(String.valueOf(gstval) + "(yes)");
+                                gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumproduct + gstval;
                                 totalamt.add(String.valueOf(sum));
                             } else {
-                                gstamt.add("0(No)");
+                                gstamt.add("0 (No)");
                                 totalamt.add(String.valueOf(sumproduct));
                             }
                             productDetails.add(stringproduct.toString());

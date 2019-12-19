@@ -46,27 +46,31 @@ public class Splash extends AppCompatActivity {
                 passed.setText("");
             }
         });
-        db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
-        Cursor c = db.rawQuery("SELECT * FROM Tables", null);
-        if (c.getCount() == 0) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
+                Cursor c = db.rawQuery("SELECT * FROM Tables", null);
+                if (c.getCount() == 0) {
+
                     textView.performClick();
                     gifImageView.setVisibility(View.INVISIBLE);
-                }
-            },2000);
-        } else {
-            while (c.moveToNext()) {
-                if (c.getString(0).equals("1")) {
-                    getArea();
-                    customerlist();
-                    Intent intent = new Intent(Splash.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                } else {
+                    while (c.moveToNext()) {
+                        if (c.getString(0).equals("1")) {
+                            getArea();
+                            customerlist();
+                            Intent intent = new Intent(Splash.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
                 }
             }
-        }
+        },2000);
+
+
         if (isNetworkAvailable() == false) {
             Toast.makeText(this, "plzz check the internet connection...", Toast.LENGTH_SHORT).show();
             finishAffinity();
