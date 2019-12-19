@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,7 +108,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         holder.paystatus.setText("Payment Status : " + paymentstatus.get(position).toString().trim());
         holder.paybal.setText("Balance : ₹ " + paybalance.get(position).toString().trim());
         if (orderstatus.get(position).toString().trim().equals("Delivered")) {
-           holder.updateorder.setVisibility(View.INVISIBLE);
+           holder.layout.setVisibility(View.GONE);
         }
         holder.shareicon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,10 +166,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        progressDialog = new ProgressDialog(context);
-//                        progressDialog.setMessage("Status Updating...");
-//                        progressDialog.show();
-//                        updateorderstatus("Delivered", order_id.get(position).toString());
+                        progressDialog = new ProgressDialog(context);
+                        progressDialog.setMessage("Status Updating...");
+                        progressDialog.show();
+                        updateorderstatus("Delivered", order_id.get(position).toString());
 
 
                     }
@@ -238,6 +239,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView ordertext, deliverytext, billtext, cnametext, producttext, totaltext, gsttext, ordertakentext, totalamt, kg, ostatus, paystatus, paybal;
         ImageView shareicon, pdfreport, updateorder;
+        LinearLayout layout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -257,6 +259,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             paybal = (TextView) itemView.findViewById(R.id.paybal);
             pdfreport = (ImageView) itemView.findViewById(R.id.pdfreport);
             updateorder = (ImageView) itemView.findViewById(R.id.dele);
+            layout = (LinearLayout)itemView.findViewById(R.id.linview);
 
         }
     }
