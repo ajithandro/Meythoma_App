@@ -10,6 +10,7 @@
     tools:context=".Splash">
 
 
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gif"
         android:layout_width="130dp"
@@ -51,40 +52,44 @@
             android:rotation="270">
 
             <!-- DEFINE ALL YOUR CONTENT,WIDGETS HERE WHICH YOU WANT TO ADD IN SLIDING DRAWER LAYOUT. -->
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:background="@drawable/meythoma"
-                android:layout_marginTop="170dp"/>
+            <pl.droidsonroids.gif.GifImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/spinners"
+                android:layout_marginTop="130dp"
+               />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="25dp"
-                android:text="Login Here"/>
+                android:text="Meythoma International"/>
 
             <EditText
                 android:id="@+id/usered"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttondesign"
                 android:padding="10dp"
+                android:drawableRight="@drawable/useric"
                 android:layout_marginTop="25dp"
                 android:hint="Username"/>
 
 
             <EditText
                 android:id="@+id/passed"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttondesign"
                 android:padding="10dp"
-                android:inputType="number"
+                android:drawableRight="@drawable/passic"
+                android:inputType="numberPassword"
                 android:layout_marginTop="25dp"
                 android:hint="password"/>
             <LinearLayout
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
@@ -95,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape"
                     android:layout_marginTop="25dp"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:layout_weight="1"
                     android:text="Submit"/>
                 <View
@@ -107,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape"
                     android:layout_marginTop="25dp"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:layout_weight="1"
                     android:text="Reset"/>
 

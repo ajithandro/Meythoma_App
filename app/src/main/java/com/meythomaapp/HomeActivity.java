@@ -1,40 +1,42 @@
 package com.meythomaapp;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-        FragmentManager fragmentManager;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    FragmentManager fragmentManager;
+    SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        final TextView textView=(TextView)findViewById(R.id.handle);
+        final TextView textView = (TextView) findViewById(R.id.handle);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame,new GifActivity()).commit();
-
-
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame, new GifActivity()).commit();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -89,7 +91,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -110,37 +111,49 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.homepage){
-            fragmentManager.beginTransaction().replace(R.id.frame,new GifActivity()).commit();
+        if (id == R.id.homepage) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new GifActivity()).commit();
 
-        }
-   else if (id == R.id.alloders){
-            fragmentManager.beginTransaction().replace(R.id.frame,new All_Orders()).commit();
+        } else if (id == R.id.alloders) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new All_Orders()).commit();
 
-        }
-        else if (id == R.id.nav_payment) {
+        } else if (id == R.id.nav_payment) {
             // Handle the camera action
-            fragmentManager.beginTransaction().replace(R.id.frame,new Today_Payment()).commit();
-        }
-        else if (id == R.id.nav_add_new_user) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new Today_Payment()).commit();
+        } else if (id == R.id.nav_add_new_user) {
             // Handle the camera action
-            fragmentManager.beginTransaction().replace(R.id.frame,new AddCustomer()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame, new AddCustomer()).commit();
         } else if (id == R.id.nav_add_area) {
             // Handle the camera action
-            fragmentManager.beginTransaction().replace(R.id.frame,new AddAreaActivity()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame, new AddAreaActivity()).commit();
         } else if (id == R.id.nav_add_category) {
-            Intent _mintent = new Intent(HomeActivity.this,AddCategory.class);
+            Intent _mintent = new Intent(HomeActivity.this, AddCategory.class);
             startActivity(_mintent);
         } else if (id == R.id.nav_new_sale) {
-            Intent _mintent = new Intent(HomeActivity.this,NewSalesActivity.class);
+            Intent _mintent = new Intent(HomeActivity.this, NewSalesActivity.class);
             startActivity(_mintent);
         } else if (id == R.id.nav_visited_entry) {
-            fragmentManager.beginTransaction().replace(R.id.frame,new VisitedEntryActivity()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame, new VisitedEntryActivity()).commit();
         } else if (id == R.id.nav_update_delivery_details) {
-            fragmentManager.beginTransaction().replace(R.id.frame,new Soon()).commit();
-        }  else if (id == R.id.nav_logout) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new Soon()).commit();
+        } else if (id == R.id.nav_logout) {
+            final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Logout...");
+            progressDialog.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
+                    db.execSQL("DELETE  From Tables WHERE status = '"+"1"+"';");
+                    Toast.makeText(getApplicationContext(), "Logout Successfull...", Toast.LENGTH_SHORT).show();
+                    db.close();
+                    progressDialog.dismiss();
+                    Intent intent=new Intent(HomeActivity.this,Splash.class);
+                    startActivity(intent);
+                }
+            }, 2000);
 
-           finishAffinity();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -149,8 +162,6 @@ public class HomeActivity extends AppCompatActivity
 
 
     }
-
-
 
 
 }

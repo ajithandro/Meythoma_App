@@ -25,6 +25,7 @@
                 android:layout_gravity="center"
                 android:id="@+id/view_cart"
                 android:src="@drawable/cart"
+                android:layout_marginLeft="150dp"
                 android:layout_width="35dp"
                 android:layout_height="35dp" />
             <TextView
@@ -62,22 +63,27 @@
                 <LinearLayout
                     android:layout_margin="10dp"
                     android:orientation="horizontal"
+                    android:layout_weight="2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
                         android:text="GST"
                         android:layout_width="110dp"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
                     <RadioGroup
                         android:orientation="horizontal"
                         android:id="@+id/radioGst"
                         android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:weightSum="2"
                         android:layout_height="wrap_content" >
 
                         <RadioButton
                             android:id="@+id/radioSgst"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/gst_yes"
                             android:checked="true" />
 
@@ -85,6 +91,7 @@
                             android:id="@+id/radioNgst"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/gst_no" />
 
                     </RadioGroup>
@@ -117,6 +124,8 @@
                         android:id="@+id/quantity"
                         android:singleLine="true"
                         android:inputType="number"
+                        android:background="@drawable/buttondesign"
+                        android:padding="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -134,6 +143,8 @@
                         android:inputType="number"
                         android:singleLine="true"
                         android:layout_width="match_parent"
+                        android:background="@drawable/buttondesign"
+                        android:padding="5dp"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout
@@ -149,6 +160,8 @@
                         android:id="@+id/amountEt"
                         android:singleLine="true"
                         android:inputType="number"
+                        android:background="@drawable/buttondesign"
+                        android:padding="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -165,6 +178,8 @@
                         android:id="@+id/amountGst"
                         android:singleLine="true"
                         android:inputType="number"
+                        android:background="@drawable/buttondesign"
+                        android:padding="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -181,6 +196,8 @@
                         android:id="@+id/amountTotal"
                         android:singleLine="true"
                         android:inputType="number"
+                        android:background="@drawable/buttondesign"
+                        android:padding="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -189,13 +206,15 @@
                     android:layout_margin="10dp"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
                     android:layout_height="wrap_content">
 
                     <Button
                         android:text=" Add to cart "
                         android:id="@+id/add_cart_btn"
                         android:textColor="#FFFF"
-                        android:background="@color/colorPrimary"
+                        android:background="@drawable/shape"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </LinearLayout>
@@ -223,7 +242,7 @@
                 android:layout_margin="5dp"
                 android:text="Go Back"
                 android:textColor="#FFFF"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/shape"
                 android:textSize="16sp" />
 
             <TextView
@@ -265,6 +284,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.6"
+                android:background="@drawable/buttondesign"
+                android:padding="5dp"
                 android:id="@+id/in_date" />
             <TextView
                 android:layout_margin="5dp"
@@ -278,6 +299,8 @@
         android:layout_width="100dp"
         android:hint="****"
         android:inputType="phone"
+        android:background="@drawable/buttondesign"
+        android:padding="5dp"
         android:layout_weight=".4"
         android:layout_height="wrap_content"
         android:id="@+id/billno" />
@@ -298,6 +321,9 @@
             android:minLines="3"
             android:hint="Comments"
             android:layout_margin="5dp"
+            android:background="@drawable/buttondesign"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -307,7 +333,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textColor="#FFFF"
-            android:background="@color/colorPrimary"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape"
             android:text=" Place Order "
             android:textAllCaps="false" />
 

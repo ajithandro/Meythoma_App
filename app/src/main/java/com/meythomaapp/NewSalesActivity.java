@@ -41,32 +41,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 public class NewSalesActivity extends AppCompatActivity {
     private GetCategoryTask mGetCategoryTask = null;
-    private PostNewSalesTask mPostNewSalesTask = null;
     EditText quantity, price_kg, amountEt, amountGst, amountTotal, in_date, et_comments, bill;
     Spinner company_name_spinner, product_type_spinner, ordertaken;
     Button add_cart_btn, order_submit_btn, back_to_sale;
@@ -94,11 +84,13 @@ public class NewSalesActivity extends AppCompatActivity {
     private LinearLayout new_sale_form, cart_view_form;
     private int mYear, mMonth, mDay;
     String username;
+    String visitedCompany;
     String customer_id;
     String delivery_date;
     String salesperson;
     String gst;
     String comments;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,15 +122,17 @@ public class NewSalesActivity extends AppCompatActivity {
                 ((TextView) v).setTextColor(Color.parseColor("#000000"));
                 return v;
             }
+
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
                         parent);
-                v.setBackgroundColor(Color.parseColor("#8BC34A"));
-                ((TextView) v).setTextColor(Color.parseColor("#000000"));
+                v.setBackgroundColor(Color.parseColor("#239B56"));
+                ((TextView) v).setTextColor(Color.parseColor("#FFFFFF"));
                 return v;
             }
         };
+
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ordertaken.setAdapter(stringArrayAdapter);
         gtotal = (TextView) findViewById(R.id.gtotal);
@@ -211,6 +205,7 @@ public class NewSalesActivity extends AppCompatActivity {
                     comments = et_comments.getText().toString();
                     delivery_date = in_date.getText().toString();
                     gst = gstYn;
+                    Toast.makeText(NewSalesActivity.this, customer_id, Toast.LENGTH_SHORT).show();
                     Log.e("***********************", jsObjArray.toString());
                     postnewsaletoserver();
                     in_date.setText("");
@@ -273,6 +268,7 @@ public class NewSalesActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+
                 String qus = quantity.getText().toString().trim();
                 String prs = price_kg.getText().toString().trim();
 
@@ -287,6 +283,7 @@ public class NewSalesActivity extends AppCompatActivity {
                     radios.setEnabled(false);
                     editor.putString("k", "NO");
                     editor.commit();
+
                 }
                 if (qus.length() > 0 && prs.length() > 0) {
                     int qu = Integer.parseInt(qus);
@@ -371,7 +368,6 @@ public class NewSalesActivity extends AppCompatActivity {
         mGetCategoryTask.execute();
         CNlist.clear();
         CNlist.add("-Select-");
-        Collections.sort(Constants.customerListAl);
         for (String cn : Constants.customerListAl) {
             CNlist.add(cn);
         }
@@ -382,12 +378,13 @@ public class NewSalesActivity extends AppCompatActivity {
                 View v = super.getView(position, convertView, parent);
                 return v;
             }
+
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView,
                         parent);
-                v.setBackgroundColor(Color.parseColor("#8BC34A"));
-                ((TextView) v).setTextColor(Color.parseColor("#000000"));
+                v.setBackgroundColor(Color.parseColor("#239B56"));
+                ((TextView) v).setTextColor(Color.parseColor("#FFFFFF"));
                 return v;
             }
         };
@@ -395,6 +392,7 @@ public class NewSalesActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item);
         company_name_spinner.setAdapter(CNSpinnerAdapter);
     }
+
     private void setGtotalAmt() {
         int tot = 0;
         for (CartBean cb : AppConfigClass.cardBeanAl) {
@@ -402,6 +400,7 @@ public class NewSalesActivity extends AppCompatActivity {
         }
         gtotal.setText("" + tot);
     }
+
     private void init() {
 
 //        cart_adapter_new= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
@@ -410,6 +409,7 @@ public class NewSalesActivity extends AppCompatActivity {
         lv_cart.setAdapter(cart_adapter_new);
 
     }
+
     public class GetCategoryTask extends AsyncTask<String, Void, String> {
 
 
@@ -462,7 +462,7 @@ public class NewSalesActivity extends AppCompatActivity {
                     catArrayList.add(name);
                 }
 
-                Collections.sort(catArrayList);
+
                 CASpinnerAdapter = new ArrayAdapter<String>
                         (conx, android.R.layout.simple_spinner_item, catArrayList) {
                     //By using this method we will define how
@@ -480,8 +480,8 @@ public class NewSalesActivity extends AppCompatActivity {
                                                 ViewGroup parent) {
                         View v = super.getDropDownView(position, convertView,
                                 parent);
-                        v.setBackgroundColor(Color.parseColor("#8BC34A"));
-                        ((TextView) v).setTextColor(Color.parseColor("#000000"));
+                        v.setBackgroundColor(Color.parseColor("#239B56"));
+                        ((TextView) v).setTextColor(Color.parseColor("#FFFFFF"));
                         return v;
                     }
                 };
@@ -503,100 +503,7 @@ public class NewSalesActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
-    public class PostNewSalesTask extends AsyncTask<String, Void, String> {
 
-
-        @Override
-        protected void onPreExecute() {
-
-            // showProgress(true);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            // TODO: attempt authentication against a network service.
-
-            String resp = "";
-            try {
-                String URL = AppConfigClass.newSalesEntryURL;
-
-
-                HttpClient httpclient = new DefaultHttpClient();
-                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                // put the values of id and name in that variable
-                nameValuePairs.add(new BasicNameValuePair("all_arraylist", jsObjArray.toString()));
-                nameValuePairs.add(new BasicNameValuePair("username", ordby));
-                nameValuePairs.add(new BasicNameValuePair("customer_id", customer_id));
-                nameValuePairs.add(new BasicNameValuePair("delivery_date", delivery_date));
-                nameValuePairs.add(new BasicNameValuePair("salesperson", salesperson));
-                nameValuePairs.add(new BasicNameValuePair("gst", gst));
-                nameValuePairs.add(new BasicNameValuePair("bno", billno));
-                nameValuePairs.add(new BasicNameValuePair("orby", ordby));
-                nameValuePairs.add(new BasicNameValuePair("comments", comments));
-
-
-                HttpPost httppost = new HttpPost(URL);
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity entity = response.getEntity();
-
-                InputStream is = entity.getContent();
-                BufferedReader reader = new BufferedReader
-                        (new InputStreamReader(is, "iso-8859-1"), 8);
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                is.close();
-                resp = sb.toString();
-
-            } catch (Exception e) {
-                resp = e.toString();
-            }
-
-            // TODO: register the new account here.
-            return resp;
-        }
-
-        @Override
-        protected void onPostExecute(final String result) {
-            mPostNewSalesTask = null;
-            try {
-                Log.e("ADD CATEGORY", "result is " + result);
-
-            } catch (Exception e) {
-                Log.e("ADD CATEGORY", "Error is " + e.toString());
-            }
-
-            showProgress(false);
-
-        }
-
-        @Override
-        protected void onCancelled() {
-            mPostNewSalesTask = null;
-            showProgress(false);
-        }
-    }
-    public String converResponseToString(InputStream InputStream) {
-        String mResult = "";
-        StringBuilder mStringBuilder;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(InputStream, "UTF-8"), 8);
-            mStringBuilder = new StringBuilder();
-            mStringBuilder.append(reader.readLine() + "\n");
-            String line = "0";
-            while ((line = reader.readLine()) != null) {
-                mStringBuilder.append(line + "\n");
-            }
-            InputStream.close();
-            mResult = mStringBuilder.toString();
-            return mResult;
-        } catch (Exception e) {
-            return mResult;
-        }
-    }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -621,12 +528,15 @@ public class NewSalesActivity extends AppCompatActivity {
 
         }
     }
+
     private void showToast(String msg) {
         Toast.makeText(conx, msg, Toast.LENGTH_LONG).show();
     }
+
     public TextView conf_tv;
     public Dialog conf_dialog;
     private int delete_position = 0;
+
     public void showConfirmDialog(String msg, final int position) {
 
 
@@ -665,6 +575,7 @@ public class NewSalesActivity extends AppCompatActivity {
         }
 
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // your code
@@ -679,25 +590,27 @@ public class NewSalesActivity extends AppCompatActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
     void postnewsaletoserver() {
         showProgress(true);
+        Log.d("retrivedatafromserver", "TestingResponse");
         String path = "all_arraylist=" + jsObjArray.toString() + "&username=" + ordby + "&customer_id=" + customer_id + "&delivery_date=" + delivery_date + "&salesperson=" + salesperson + "&gst=" + gst + "&bno=" + billno + "&orby=" + ordby + "&comments=" + comments;
         StringRequest request = new StringRequest(Request.Method.POST, AppConfigClass.newSalesEntryURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 showProgress(false);
                 Toast.makeText(NewSalesActivity.this, s.toString(), Toast.LENGTH_LONG).show();
-                Log.d("retrivedatafromserver",s);
+                Log.d("retrivedatafromserver", s);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<String, String>();
+                HashMap<String, String> params = new HashMap<String, String>();
                 params.put("all_arraylist", jsObjArray.toString());
                 params.put("username", ordby);
                 params.put("customer_id", customer_id);

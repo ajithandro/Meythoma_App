@@ -1,4 +1,5 @@
 package com.meythomaapp;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,7 +28,7 @@ public class Splash extends AppCompatActivity {
     GifImageView gifImageView;
     SQLiteDatabase db;
     EditText usered, passed;
-    Button submit,reset;
+    Button submit, reset;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class Splash extends AppCompatActivity {
         usered = (EditText) findViewById(R.id.usered);
         passed = (EditText) findViewById(R.id.passed);
         submit = (Button) findViewById(R.id.submit_btn);
-        reset = (Button)findViewById(R.id.reset);
+        reset = (Button) findViewById(R.id.reset);
         createdDB();
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,31 +47,24 @@ public class Splash extends AppCompatActivity {
                 passed.setText("");
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
-                Cursor c = db.rawQuery("SELECT * FROM Tables", null);
-                if (c.getCount() == 0) {
-
+        db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM Tables", null);
+        if (c.getCount() == 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     textView.performClick();
                     gifImageView.setVisibility(View.INVISIBLE);
-
-                } else {
-                    while (c.moveToNext()) {
-                        if (c.getString(0).equals("1")) {
-                            getArea();
-                            customerlist();
-                            Intent intent = new Intent(Splash.this, HomeActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
+                }
+            }, 2000);
+        } else {
+            while (c.moveToNext()) {
+                if (c.getString(0).equals("1")) {
+                    getArea();
+                    customerlist();
                 }
             }
-        },2000);
-
-
+        }
         if (isNetworkAvailable() == false) {
             Toast.makeText(this, "plzz check the internet connection...", Toast.LENGTH_SHORT).show();
             finishAffinity();
@@ -85,8 +79,6 @@ public class Splash extends AppCompatActivity {
                 } else if (passed.getText().toString().isEmpty()) {
                     usered.setError("Enter valid password");
                 } else {
-                    getArea();
-                    customerlist();
                     loginattempt(usered.getText().toString(), passed.getText().toString());
                 }
             }
@@ -99,6 +91,10 @@ public class Splash extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     void loginattempt(String username, String password) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Verify Account...");
+        progressDialog.show();
         StringRequest stringRequest1 = new StringRequest(Request.Method.POST, AppConfigClass.loginURL + "?user=" + password + "&pass=" + username, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -106,10 +102,10 @@ public class Splash extends AppCompatActivity {
                     db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
                     db.execSQL("insert into Tables values('" + response + "');");
                     db.close();
-                    Intent intent = new Intent(Splash.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(Splash.this, "Login Success...", Toast.LENGTH_SHORT).show();
+                    getArea();
+                    customerlist();
+                    progressDialog.dismiss();
+                    Toast.makeText(Splash.this, "Login Successfull...", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(Splash.this, "Incorrect Details", Toast.LENGTH_SHORT).show();
                 }
@@ -122,14 +118,11 @@ public class Splash extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(Splash.this);
         requestQueue.add(stringRequest1);
     }
-
     void createdDB() {
         db = openOrCreateDatabase("loginStatus", MODE_PRIVATE, null);
         db.execSQL("create table if not exists Tables(status TEXT);");
-        Toast.makeText(getApplicationContext(), "Database Created Successfully", Toast.LENGTH_SHORT).show();
         db.close();
     }
-
     void getArea() {
         StringRequest stringRequest2 = new StringRequest(Request.Method.GET, AppConfigClass.getAreaListURL, new Response.Listener<String>() {
             @Override
@@ -152,29 +145,23 @@ public class Splash extends AppCompatActivity {
                             Constants.areasListAl.add(name);
                         }
                     }
-
                 } catch (Exception e) {
 
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
             }
         });
         RequestQueue requestQueue2 = Volley.newRequestQueue(Splash.this);
         requestQueue2.add(stringRequest2);
-
     }
-    void customerlist(){
+    void customerlist() {
         StringRequest stringRequest3 = new StringRequest(Request.Method.GET, AppConfigClass.getCustomerURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-
                     Constants.customerListAl.clear();
                     Constants.customerIdListAl.clear();
                     Constants.customerJsonObjListMap.clear();
@@ -184,25 +171,22 @@ public class Splash extends AppCompatActivity {
                         JSONObject jsObj = jsonArray1.getJSONObject(i);
                         String cId = jsObj.getString("customer_id");
                         String name = jsObj.getString("company_name");
-                        Constants.customerJsonObjListMap.put(name,jsObj);
+                        Constants.customerJsonObjListMap.put(name, jsObj);
                         Constants.customerIdListAl.add(cId);
                         Constants.customerListAl.add(name);
                     }
-
+                    Intent intent = new Intent(Splash.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 } catch (Exception e) {
-
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
             }
         });
         RequestQueue requestQueue3 = Volley.newRequestQueue(Splash.this);
         requestQueue3.add(stringRequest3);
-
     }
 }

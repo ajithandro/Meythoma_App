@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class GifActivity extends Fragment {
         paybalance = new ArrayList();
         showprogress();
         getvalues("nongst");
+        Log.d("retrivedatafromserver","TestingResponse");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
                 if (Build.VERSION.SDK_INT >= 24) {
