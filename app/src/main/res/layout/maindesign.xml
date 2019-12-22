@@ -113,7 +113,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="20dp"
                         android:background="@drawable/shape"
                         android:orientation="horizontal"
                         android:padding="5dp"
@@ -254,6 +254,7 @@
                     android:layout_marginTop="35dp"
                     android:background="@drawable/circle"
                     android:gravity="center"
+                    android:id="@+id/cir"
                     android:orientation="vertical">
 
                     <TextView
@@ -274,6 +275,19 @@
                         android:textStyle="bold" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/updatepay"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cir"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:background="@drawable/buttondesign"
+                    android:layout_alignParentRight="true"
+                    android:text="Update Payment"
+                    />
 
             </RelativeLayout>
 

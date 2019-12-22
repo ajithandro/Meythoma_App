@@ -175,6 +175,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 alertDialog.show();
             }
         });
+        holder.updatepay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View dialogView = LayoutInflater.from(context).inflate(R.layout.pay_confrirmation, holder.viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
         holder.pdfreport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,9 +226,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView ordertext, deliverytext, billtext, cnametext, producttext, totaltext, gsttext, ordertakentext, totalamt, kg, ostatus, paystatus, paybal;
+        TextView updatepay,ordertext, deliverytext, billtext, cnametext, producttext, totaltext, gsttext, ordertakentext, totalamt, kg, ostatus, paystatus, paybal;
         ImageView shareicon, pdfreport, updateorder;
         LinearLayout layout;
+        ViewGroup viewGroup;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -239,6 +250,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             pdfreport = (ImageView) itemView.findViewById(R.id.pdfreport);
             updateorder = (ImageView) itemView.findViewById(R.id.dele);
             layout = (LinearLayout) itemView.findViewById(R.id.linview);
+            updatepay=(TextView)itemView.findViewById(R.id.updatepay);
+             viewGroup = (ViewGroup) itemView.findViewById(android.R.id.content);
+
         }
     }
 
@@ -487,5 +501,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         });
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
+    }
+    private void showCustomDialog() {
+
+
     }
 }

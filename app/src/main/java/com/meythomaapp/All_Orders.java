@@ -48,9 +48,7 @@ public class All_Orders extends Fragment {
         allnongstbtn = (Button) view.findViewById(R.id.allnongstbtn);
         listorder = (RecyclerView) view.findViewById(R.id.allorderlist);
         declarearray();
-        final ArrayAdapter<String> shopAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, companyName);
-        autoname.setThreshold(2);
-        autoname.setAdapter(shopAdapter);
+
         getvalues("nongst");
         sharedPreferences = getActivity().getSharedPreferences("dbdata", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -79,11 +77,15 @@ public class All_Orders extends Fragment {
                 editor.commit();
             }
         });
+        final ArrayAdapter<String> shopAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,companyName);
+        autoname.setThreshold(2);
+        autoname.setAdapter(shopAdapter);
         return view;
     }
     void getvalues(final String type) {
         showprogress();
         cleararrays();
+        companyName.clear();
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfigClass.retryallorders + "?ty=" + type, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -274,20 +276,20 @@ public class All_Orders extends Fragment {
         RequestQueue requestQueue1 = Volley.newRequestQueue(getActivity());
         requestQueue1.add(stringRequest1);
     }
-    void showprogress() {
+    private void showprogress() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Fetching All Order's List..");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
-    void displaydata() {
+    private void displaydata() {
         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
         listorder.setLayoutManager(linearLayoutManagertwo);
         OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
         ordersAdapter.notifyDataSetChanged();
         listorder.setAdapter(ordersAdapter);
     }
-    void cleararrays() {
+    private void cleararrays() {
         orderDate.clear();
         order_id.clear();
         deliveryDate.clear();
@@ -322,4 +324,5 @@ public class All_Orders extends Fragment {
         paymentstatus = new ArrayList();
         paybalance = new ArrayList();
     }
+
 }
