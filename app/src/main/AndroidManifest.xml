@@ -45,7 +45,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/prov02ider_paths"/>
         </provider>
         <activity android:name=".Soon"></activity>
         <activity android:name=".Today_Payment" />
