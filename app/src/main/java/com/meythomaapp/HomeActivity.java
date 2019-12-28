@@ -130,9 +130,12 @@ public class HomeActivity extends AppCompatActivity
             Intent _mintent = new Intent(HomeActivity.this, AddCategory.class);
             startActivity(_mintent);
         } else if (id == R.id.nav_new_sale) {
-            Intent _mintent = new Intent(HomeActivity.this, NewSalesActivity.class);
-            startActivity(_mintent);
-        } else if (id == R.id.nav_visited_entry) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new NewSalesActivity()).commit();
+        }
+        else if (id == R.id.nav_delivered) {
+            fragmentManager.beginTransaction().replace(R.id.frame, new Today_Delivered()).commit();
+        }
+        else if (id == R.id.nav_visited_entry) {
             fragmentManager.beginTransaction().replace(R.id.frame, new VisitedEntryActivity()).commit();
         } else if (id == R.id.nav_update_delivery_details) {
             fragmentManager.beginTransaction().replace(R.id.frame, new Soon()).commit();

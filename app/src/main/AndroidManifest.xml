@@ -38,6 +38,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Today_Delivered"></activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -45,9 +47,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/prov02ider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".Soon"></activity>
+
+        <activity android:name=".Soon" />
         <activity android:name=".Today_Payment" />
         <activity android:name=".All_Orders" />
         <activity android:name=".Splash">
@@ -71,8 +74,6 @@
         <activity android:name=".SalesList" />
         <activity android:name=".AddAreaActivity" />
         <activity android:name=".VisitedEntryActivity" />
-
-
     </application>
 
 </manifest>

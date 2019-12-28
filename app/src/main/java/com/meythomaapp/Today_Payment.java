@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 public class Today_Payment extends Fragment {
     View view;
+    SwipeRefreshLayout swipeRefreshLayout;
     private int mYear, mMonth, mDay;
     ProgressDialog progressDialog;
     Button paygst, paynongst;
@@ -50,6 +53,7 @@ public class Today_Payment extends Fragment {
         paylin.setVisibility(View.INVISIBLE);
         recyclerViewpay = (RecyclerView) view.findViewById(R.id.payorder);
         orderdateinput = (EditText) view.findViewById(R.id.orderdateinput);
+        swipeRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipepay);
         orderdateinput.requestFocus();
         orderdateinput.setShowSoftInputOnFocus(false);
         declarearrays();
@@ -58,6 +62,12 @@ public class Today_Payment extends Fragment {
         strDate = mdformat.format(calendar.getTime());
         ordsts = "nongst";
         getpayments(ordsts, strDate);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getpayments(ordsts, strDate);
+            }
+        });
         orderdateinput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,6 +183,7 @@ public class Today_Payment extends Fragment {
                        displaydata();
                     }
                     progressDialog.dismiss();
+                    swipeRefreshLayout.setRefreshing(false);
 
                     Toast.makeText(getActivity(), "Total Record's : " + billno.size(), Toast.LENGTH_SHORT).show();
                     if (billno.size() == 0) {

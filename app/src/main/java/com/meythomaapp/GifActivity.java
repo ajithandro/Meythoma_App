@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 public class GifActivity extends Fragment {
+    SwipeRefreshLayout swipeRefreshLayout;
     View view;
     RecyclerView listorder;
     ProgressDialog progressDialog;
@@ -42,6 +45,7 @@ public class GifActivity extends Fragment {
         giflin = (LinearLayout) view.findViewById(R.id.giflin);
         upgst = (Button) view.findViewById(R.id.upgst);
         upnongst = (Button) view.findViewById(R.id.upnongst);
+        swipeRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipegif);
         giflin.setVisibility(View.INVISIBLE);
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Upcoming Orders");
         progressDialog = new ProgressDialog(getActivity());
@@ -62,6 +66,12 @@ public class GifActivity extends Fragment {
         paybalance = new ArrayList();
         showprogress();
         getvalues("nongst");
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getvalues("nongst");
+            }
+        });
         Log.d("retrivedatafromserver","TestingResponse");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
@@ -181,6 +191,7 @@ public class GifActivity extends Fragment {
                         OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(),order_id,buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
                         ordersAdapter.notifyDataSetChanged();
                         listorder.setAdapter(ordersAdapter);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                     Toast.makeText(getActivity(), "Total Record's : " + billno.size(), Toast.LENGTH_SHORT).show();
                     if (billno.size() == 0) {

@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Today_Payment">
+    tools:context=".Today_Delivered">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipepay"
+        android:id="@+id/swipedeliverd"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,20 +20,19 @@
             android:paddingBottom="1dp">
 
             <EditText
-                android:id="@+id/orderdateinput"
+                android:id="@+id/orderdeliverd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buttondesign"
                 android:drawableRight="@drawable/dateorder"
-                android:hint="Payment Date"
+                android:hint="Delivered Date"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="5dp" />
 
-
             <LinearLayout
-                android:id="@+id/paylin"
+                android:id="@+id/deliveredlin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -56,23 +55,17 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/payorder"
+                android:id="@+id/deliveredorder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/lin9"
-                android:layout_below="@+id/orderdateinput"
+                android:layout_below="@+id/orderdeliverd"
                 android:layout_marginTop="2dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
-
-            <!-- Button for the handle of SlidingDrawer -->
-
-
-            <!-- DEFINE ALL YOUR CONTENT,WIDGETS HERE WHICH YOU WANT TO ADD IN SLIDING DRAWER LAYOUT. -->
-
             <LinearLayout
-                android:id="@+id/lin9"
+                android:id="@+id/lin11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -80,7 +73,7 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/paygstbtn"
+                    android:id="@+id/deliveredgstbtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
@@ -92,7 +85,7 @@
                     android:typeface="monospace" />
 
                 <Button
-                    android:id="@+id/paynongstbtn"
+                    android:id="@+id/deliverednongstbtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

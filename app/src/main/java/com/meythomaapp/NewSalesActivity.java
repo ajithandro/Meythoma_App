@@ -1,4 +1,5 @@
 package com.meythomaapp;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -14,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -30,9 +32,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,6 +44,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -48,13 +53,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NewSalesActivity extends AppCompatActivity {
+public class NewSalesActivity extends Fragment {
     private GetCategoryTask mGetCategoryTask = null;
     EditText quantity, price_kg, amountEt, amountGst, amountTotal, in_date, et_comments, bill;
     Spinner company_name_spinner, product_type_spinner, ordertaken;
@@ -89,31 +95,31 @@ public class NewSalesActivity extends AppCompatActivity {
     String salesperson;
     String gst;
     String comments;
+    View view;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_sales);
-        sharedPreferences = getSharedPreferences("prefer", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_new_sales, container, false);
+//        sharedPreferences = getActivity().getSharedPreferences("prefer", getActivity().MODE_PRIVATE);
+//        final SharedPreferences.Editor editor = sharedPreferences.edit();
         conx = this;
-        Toast.makeText(this, sharedPreferences.getString("k", ""), Toast.LENGTH_SHORT).show();
-        preferences = new AppPreferences(this);
-        mnew_progress = findViewById(R.id.new_progress);
+//        Toast.makeText(getActivity(), sharedPreferences.getString("k", ""), Toast.LENGTH_SHORT).show();
+//        preferences = new AppPreferences(getActivity());
+        mnew_progress = view.findViewById(R.id.new_progress);
         CNlist = new ArrayList<String>();
-        view_cart = (ImageView) findViewById(R.id.view_cart);
-        cart_count = (TextView) findViewById(R.id.cart_count);
-        back_to_sale = (Button) findViewById(R.id.back_to_sale);
-        radios = (RadioButton) findViewById(R.id.radioSgst);
-        radion = (RadioButton) findViewById(R.id.radioNgst);
-        company_name_spinner = (Spinner) findViewById(R.id.company_name_spinner);
-        product_type_spinner = (Spinner) findViewById(R.id.product_type_spinner);
-        order_submit_btn = (Button) findViewById(R.id.order_submit_btn);
-        bill = (EditText) findViewById(R.id.billno);
-        ordertaken = (Spinner) findViewById(R.id.ordertaken);
+        view_cart = (ImageView)view. findViewById(R.id.view_cart);
+        cart_count = (TextView) view.findViewById(R.id.cart_count);
+        radios = (RadioButton) view.findViewById(R.id.radioSgst);
+        radion = (RadioButton) view.findViewById(R.id.radioNgst);
+        company_name_spinner = (Spinner) view.findViewById(R.id.company_name_spinner);
+        product_type_spinner = (Spinner)view. findViewById(R.id.product_type_spinner);
+        order_submit_btn = (Button)view. findViewById(R.id.order_submit_btn);
+        bill = (EditText)view. findViewById(R.id.billno);
+        ordertaken = (Spinner)view. findViewById(R.id.ordertaken);
         billno = bill.getText().toString();
         String[] ordtak = {"-Order By-", "Hussian", "SivaPrkash", "Gowtham", "Vaisul", "Ganesh", "Seenu"};
-        final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ordtak) {
+        final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ordtak) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -134,26 +140,26 @@ public class NewSalesActivity extends AppCompatActivity {
 
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ordertaken.setAdapter(stringArrayAdapter);
-        gtotal = (TextView) findViewById(R.id.gtotal);
+        gtotal = (TextView)view. findViewById(R.id.gtotal);
         gTotalAmt = 0;
-        back_to_sale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new_sale_form.setVisibility(View.VISIBLE);
-                cart_view_form.setVisibility(View.GONE);
-            }
-        });
-        if (sharedPreferences.getString("k", "").equals("YES")) {
-            radion.setEnabled(false);
-        } else if (sharedPreferences.getString("k", "").equals("NO")) {
-            radios.setEnabled(false);
-        } else {
-            radion.setEnabled(true);
-            radion.setEnabled(true);
-        }
-        new_sale_form = (LinearLayout) findViewById(R.id.new_sale_form);
-        cart_view_form = (LinearLayout) findViewById(R.id.cart_view_form);
-        lv_cart = (ListView) findViewById(R.id.lv_cart);
+//        back_to_sale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new_sale_form.setVisibility(View.VISIBLE);
+//                cart_view_form.setVisibility(View.GONE);
+//            }
+//        });
+//        if (sharedPreferences.getString("k", "").equals("YES")) {
+//            radion.setEnabled(false);
+//        } else if (sharedPreferences.getString("k", "").equals("NO")) {
+//            radios.setEnabled(false);
+//        } else {
+//            radion.setEnabled(true);
+//            radion.setEnabled(true);
+//        }
+        new_sale_form = (LinearLayout) view.findViewById(R.id.new_sale_form);
+        cart_view_form = (LinearLayout) view.findViewById(R.id.cart_view_form);
+        lv_cart = (ListView)view. findViewById(R.id.lv_cart);
         SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
                         lv_cart,
@@ -185,8 +191,8 @@ public class NewSalesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     showProgress(true);
-                    editor.putString("k", "Fine");
-                    editor.commit();
+//                    editor.putString("k", "Fine");
+//                    editor.commit();
                     jsObjArray = new ArrayList<>();
                     jsObjArray.clear();
                     ObjectMapper mapperObj;//= new ObjectMapper();
@@ -195,8 +201,8 @@ public class NewSalesActivity extends AppCompatActivity {
                         String jsonStr = mapperObj.writeValueAsString(cbObj);
                         jsObjArray.add(jsonStr);
                     }
-                    salesperson = preferences.getStringPreference(conx, Constants.PREFERENCES_SALESPERSON_ID);
-                    username = preferences.getStringPreference(conx, Constants.PREFERENCES_SALESPERSON_NAME);
+                    salesperson = preferences.getStringPreference(getActivity(), Constants.PREFERENCES_SALESPERSON_ID);
+                    username = preferences.getStringPreference(getActivity(), Constants.PREFERENCES_SALESPERSON_NAME);
                     String visitedCompany = company_name_spinner.getSelectedItem().toString().trim();
                     ordby = ordertaken.getSelectedItem().toString().trim();
                     int companyIndex = Constants.customerListAl.indexOf(visitedCompany);
@@ -204,9 +210,9 @@ public class NewSalesActivity extends AppCompatActivity {
                     comments = et_comments.getText().toString();
                     delivery_date = in_date.getText().toString();
                     gst = gstYn;
-                    Toast.makeText(NewSalesActivity.this, customer_id, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), customer_id, Toast.LENGTH_SHORT).show();
                     Log.e("***********************", jsObjArray.toString());
-                    postnewsaletoserver();
+                   // postnewsaletoserver();
                     in_date.setText("");
                     bill.setText("");
                     et_comments.setText("");
@@ -221,13 +227,13 @@ public class NewSalesActivity extends AppCompatActivity {
                 }
             }
         });
-        radioGst = (RadioGroup) findViewById(R.id.radioGst);
-        quantity = (EditText) findViewById(R.id.quantity);
-        price_kg = (EditText) findViewById(R.id.price_kg);
-        amountEt = (EditText) findViewById(R.id.amountEt);
-        amountGst = (EditText) findViewById(R.id.amountGst);
-        amountTotal = (EditText) findViewById(R.id.amountTotal);
-        et_comments = (EditText) findViewById(R.id.et_comments);
+        radioGst = (RadioGroup) view.findViewById(R.id.radioGst);
+        quantity = (EditText)view. findViewById(R.id.quantity);
+        price_kg = (EditText) view.findViewById(R.id.price_kg);
+        amountEt = (EditText) view.findViewById(R.id.amountEt);
+        amountGst = (EditText) view.findViewById(R.id.amountGst);
+        amountTotal = (EditText) view.findViewById(R.id.amountTotal);
+        et_comments = (EditText)view. findViewById(R.id.et_comments);
         amountEt.setEnabled(false);
         amountGst.setEnabled(false);
         amountTotal.setEnabled(false);
@@ -236,7 +242,7 @@ public class NewSalesActivity extends AppCompatActivity {
         amountEt.setText("0");
         amountGst.setText("0");
         amountTotal.setText("0");
-        in_date = (EditText) findViewById(R.id.in_date);
+        in_date = (EditText) view.findViewById(R.id.in_date);
         in_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,7 +250,7 @@ public class NewSalesActivity extends AppCompatActivity {
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(conx,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -272,16 +278,16 @@ public class NewSalesActivity extends AppCompatActivity {
                 String prs = price_kg.getText().toString().trim();
 
                 int selectedId = radioGst.getCheckedRadioButtonId();
-                selectedRadioBtn = (RadioButton) findViewById(selectedId);
+                selectedRadioBtn = (RadioButton) view.findViewById(selectedId);
                 gstYn = selectedRadioBtn.getText().toString().trim();
                 if (gstYn.equals("YES")) {
                     radion.setEnabled(false);
-                    editor.putString("k", "YES");
-                    editor.commit();
+//                    editor.putString("k", "YES");
+//                    editor.commit();
                 } else {
                     radios.setEnabled(false);
-                    editor.putString("k", "NO");
-                    editor.commit();
+//                    editor.putString("k", "NO");
+//                    editor.commit();
 
                 }
                 if (qus.length() > 0 && prs.length() > 0) {
@@ -310,16 +316,16 @@ public class NewSalesActivity extends AppCompatActivity {
 
             }
         });
-        add_cart_btn = (Button) findViewById(R.id.add_cart_btn);
+        add_cart_btn = (Button) view.findViewById(R.id.add_cart_btn);
         add_cart_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int selectedId = radioGst.getCheckedRadioButtonId();
-                selectedRadioBtn = (RadioButton) findViewById(selectedId);
+                selectedRadioBtn = (RadioButton) view.findViewById(selectedId);
                 gstYn = selectedRadioBtn.getText().toString().trim();
                 // find the radiobutton by returned id
                 CartBean cartBean = new CartBean();
-                cart_count = (TextView) findViewById(R.id.cart_count);
+                cart_count = (TextView) view.findViewById(R.id.cart_count);
                 cmName = company_name_spinner.getSelectedItem().toString().trim();
                 String proTypN = product_type_spinner.getSelectedItem().toString().trim();
                 int indx = catArrayList.indexOf(proTypN);
@@ -353,10 +359,10 @@ public class NewSalesActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                cart_adapter= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
                 if (cart_count.getText().toString().equals("")) {
-                    Toast.makeText(conx, "Cart is Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Cart is Empty", Toast.LENGTH_SHORT).show();
                 } else {
                     setGtotalAmt();
-                    cart_adapter_new = new CartAdapterNew(conx, AppConfigClass.cardBeanAl);
+                    cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
                     lv_cart.setAdapter(cart_adapter_new);
                     new_sale_form.setVisibility(View.GONE);
                     cart_view_form.setVisibility(View.VISIBLE);
@@ -371,7 +377,7 @@ public class NewSalesActivity extends AppCompatActivity {
             CNlist.add(cn);
         }
         CNSpinnerAdapter = new ArrayAdapter<String>
-                (conx, android.R.layout.simple_spinner_item, CNlist) {
+                (getActivity(), android.R.layout.simple_spinner_item, CNlist) {
             public View getView(int position, View convertView,
                                 ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
@@ -390,6 +396,7 @@ public class NewSalesActivity extends AppCompatActivity {
         CNSpinnerAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         company_name_spinner.setAdapter(CNSpinnerAdapter);
+        return view;
     }
 
     private void setGtotalAmt() {
@@ -403,8 +410,8 @@ public class NewSalesActivity extends AppCompatActivity {
     private void init() {
 
 //        cart_adapter_new= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
-        cart_adapter_new = new CartAdapterNew(conx, AppConfigClass.cardBeanAl);
-        lv_cart = (ListView) findViewById(R.id.lv_cart);
+        cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
+        lv_cart = (ListView) view.findViewById(R.id.lv_cart);
         lv_cart.setAdapter(cart_adapter_new);
 
     }
@@ -463,7 +470,7 @@ public class NewSalesActivity extends AppCompatActivity {
 
 
                 CASpinnerAdapter = new ArrayAdapter<String>
-                        (conx, android.R.layout.simple_spinner_item, catArrayList) {
+                        (getActivity(), android.R.layout.simple_spinner_item, catArrayList) {
                     //By using this method we will define how
                     //the text appears before clicking a spinner
                     public View getView(int position, View convertView,
@@ -529,7 +536,7 @@ public class NewSalesActivity extends AppCompatActivity {
     }
 
     private void showToast(String msg) {
-        Toast.makeText(conx, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
     public TextView conf_tv;
@@ -539,7 +546,7 @@ public class NewSalesActivity extends AppCompatActivity {
     public void showConfirmDialog(String msg, final int position) {
 
 
-        conf_dialog = new Dialog(conx);
+        conf_dialog = new Dialog(getActivity());
         conf_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         conf_dialog.setCancelable(false);
         conf_dialog.setContentView(R.layout.custom_dialog);
@@ -582,12 +589,12 @@ public class NewSalesActivity extends AppCompatActivity {
                 new_sale_form.setVisibility(View.VISIBLE);
                 cart_view_form.setVisibility(View.GONE);
             } else {
-                finish();
+                getActivity().finish();
             }
             return true;
         }
 
-        return super.onKeyDown(keyCode, event);
+        return super.getActivity().onKeyDown(keyCode, event);
     }
 
     void postnewsaletoserver() {
@@ -598,7 +605,7 @@ public class NewSalesActivity extends AppCompatActivity {
             @Override
             public void onResponse(String s) {
                 showProgress(false);
-                Toast.makeText(NewSalesActivity.this, s.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), s.toString(), Toast.LENGTH_LONG).show();
                 Log.d("retrivedatafromserver", s);
             }
         }, new Response.ErrorListener() {
@@ -623,7 +630,7 @@ public class NewSalesActivity extends AppCompatActivity {
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(request);
 
 

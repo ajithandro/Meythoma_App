@@ -3,13 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GifActivity">
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipegif">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingTop="58dp"
     android:paddingBottom="1dp"
     android:paddingRight="2dp"
     android:paddingLeft="2dp"
-    android:layout_height="match_parent"
-    tools:context=".GifActivity">
+    >
 
 
                 <LinearLayout
@@ -83,7 +92,8 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-
+</RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 

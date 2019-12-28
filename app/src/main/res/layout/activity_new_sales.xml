@@ -4,43 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+       android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/view_cart"
+            android:src="@drawable/cart"
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
+        <TextView
+            android:id="@+id/cart_count"
+            android:text=""
+            android:textColor="#E30D81"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/new_sale_form"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="50dp"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-            android:textSize="22sp"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add New Sale"/>
-            <ImageView
-                android:layout_gravity="center"
-                android:id="@+id/view_cart"
-                android:src="@drawable/cart"
-                android:layout_marginLeft="150dp"
-                android:layout_width="35dp"
-                android:layout_height="35dp" />
-            <TextView
-                android:id="@+id/cart_count"
-                android:text=""
-                android:textColor="#E30D81"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <ScrollView
+
+        qqqqq<ScrollView
             android:id="@+id/add_cust_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <LinearLayout
-                android:layout_margin="20dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -84,7 +79,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/gst_yes"
+                            android:text="@string/gst_no"
                             android:checked="true" />
 
                         <RadioButton
@@ -92,7 +87,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/gst_no" />
+                            android:text="@string/gst_yes" />
 
                     </RadioGroup>
                 </LinearLayout>
@@ -218,132 +213,126 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cart_view_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp">
+
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="92dp"
+                            android:text="Grand Total:" />
+
+                        <TextView
+                            android:id="@+id/gtotal"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="20dp"
+                            android:text="0" />
+
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:weightSum="4"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_margin="5dp"
+                            android:text="Delivery Date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.6"/>
+                        <EditText
+                            android:layout_margin="5dp"
+                            android:hint="Select Date"
+                            android:editable="false"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.6"
+                            android:background="@drawable/buttondesign"
+                            android:padding="5dp"
+                            android:id="@+id/in_date" />
+                        <TextView
+                            android:layout_margin="5dp"
+                            android:text="Bill No"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".4"/>
+
+                        <EditText
+                            android:layout_margin="5dp"
+                            android:layout_width="100dp"
+                            android:hint="****"
+                            android:inputType="phone"
+                            android:background="@drawable/buttondesign"
+                            android:padding="5dp"
+                            android:layout_weight=".4"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/billno" />
+
+                    </LinearLayout>
+
+
+                    <Spinner
+                        android:id="@+id/ordertaken"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:layout_height="wrap_content"></Spinner>
+
+
+                    <EditText
+                        android:id="@+id/et_comments"
+                        android:maxLines="5"
+                        android:minLines="3"
+                        android:hint="Comments"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/buttondesign"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/order_submit_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="#FFFF"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/shape"
+                        android:layout_marginBottom="20dp"
+                        android:text=" Place Order "
+                        android:textAllCaps="false" />
+
+                    <ListView
+                        android:id="@+id/lv_cart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"/>
+
+                </LinearLayout>
+
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/cart_view_form"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp">
-
-            <Button
-                android:id="@+id/back_to_sale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Go Back"
-                android:textColor="#FFFF"
-                android:background="@drawable/shape"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="92dp"
-                android:text="Grand Total:" />
-
-            <TextView
-                android:id="@+id/gtotal"
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="20dp"
-                android:text="1000000" />
-
-        </RelativeLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:weightSum="4"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_margin="5dp"
-                android:text="Delivery Date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.6"/>
-            <EditText
-                android:layout_margin="5dp"
-                android:hint="Select Date"
-                android:editable="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.6"
-                android:background="@drawable/buttondesign"
-                android:padding="5dp"
-                android:id="@+id/in_date" />
-            <TextView
-                android:layout_margin="5dp"
-                android:text="Bill No"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".4"/>
-
-    <EditText
-        android:layout_margin="5dp"
-        android:layout_width="100dp"
-        android:hint="****"
-        android:inputType="phone"
-        android:background="@drawable/buttondesign"
-        android:padding="5dp"
-        android:layout_weight=".4"
-        android:layout_height="wrap_content"
-        android:id="@+id/billno" />
-
-        </LinearLayout>
-
-
-        <Spinner
-            android:id="@+id/ordertaken"
-            android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_height="wrap_content"></Spinner>
-
-
-        <EditText
-            android:id="@+id/et_comments"
-            android:maxLines="5"
-            android:minLines="3"
-            android:hint="Comments"
-            android:layout_margin="5dp"
-            android:background="@drawable/buttondesign"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/order_submit_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textColor="#FFFF"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape"
-            android:text=" Place Order "
-            android:textAllCaps="false" />
-
-        <ListView
-            android:id="@+id/lv_cart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_centerInParent="true"
