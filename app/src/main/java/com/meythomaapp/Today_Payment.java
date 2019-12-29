@@ -3,6 +3,7 @@ package com.meythomaapp;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,6 @@ public class Today_Payment extends Fragment {
                     JSONObject jsonObject1 = new JSONObject(response);
                     JSONArray jsonArray1 = jsonObject1.getJSONArray("project_details");
                     for (int i = 0; i < jsonArray1.length(); i++) {
-
                         JSONObject obj = jsonArray1.getJSONObject(i);
                         orderDate.add(obj.getString("order_date"));
                         deliveryDate.add(obj.getString("delivery_date"));
@@ -122,6 +122,7 @@ public class Today_Payment extends Fragment {
                         ordertakenby.add(obj.getString("created_by"));
                         orderstatus.add(obj.getString("order_status"));
                         buyerad.add(obj.getString("company_address"));
+                        totalamt.add(obj.getString("paidAmount"));
                         order_id.add(obj.getString("order_id"));
                         if (obj.getString("status").equals("10")) {
                             paymentstatus.add("Completed");
@@ -148,10 +149,12 @@ public class Today_Payment extends Fragment {
                                 gstval = (sumtotal * 5) / 100;
                                 gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumtotal + gstval;
-                                totalamt.add(String.valueOf(sum));
+
+                               // totalamt.add(String.valueOf(sum));
                             } else {
                                 gstamt.add("0 (No)");
-                                totalamt.add(String.valueOf(sumtotal));
+
+                               // totalamt.add(String.valueOf(sumtotal));
                             }
                             sumtotal = 0;
                             productDetails.add(stringproduct.toString());
@@ -171,17 +174,30 @@ public class Today_Payment extends Fragment {
                                 gstval = (sumproduct * 5) / 100;
                                 gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumproduct + gstval;
-                                totalamt.add(String.valueOf(sum));
+                                //totalamt.add(obj.getString("paidAmount"));
+                               // totalamt.add(String.valueOf(sum));
                             } else {
                                 gstamt.add("0 (No)");
-                                totalamt.add(String.valueOf(sumproduct));
+                               // totalamt.add(String.valueOf(sumproduct));
+                                //totalamt.add(obj.getString("paidAmount"));
                             }
                             productDetails.add(stringproduct.toString());
                             kgdetails.add(stringvol.toString());
                             totalAmount.add(stringrate.toString());
                         }
-                       displaydata();
+
                     }
+                    try {
+                        JSONObject jsonObject2 = new JSONObject(response);
+                        JSONArray jsonArray2 = jsonObject2.getJSONArray("project_details1");
+                        for (int i = 0; i < jsonArray2.length(); i++) {
+                            JSONObject obj1 = jsonArray1.getJSONObject(i);
+                            Log.d("Kalil",obj1.getString("GROUP_CONCAT(DISTINCT chequeDate, ': ', paidAmount SEPARATOR ', ')"));
+                    }
+                    }catch (Exception e){
+
+                    }displaydata();
+
                     progressDialog.dismiss();
                     swipeRefreshLayout.setRefreshing(false);
 

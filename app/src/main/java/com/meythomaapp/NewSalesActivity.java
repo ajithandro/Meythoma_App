@@ -101,11 +101,8 @@ public class NewSalesActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_new_sales, container, false);
-//        sharedPreferences = getActivity().getSharedPreferences("prefer", getActivity().MODE_PRIVATE);
-//        final SharedPreferences.Editor editor = sharedPreferences.edit();
         conx = this;
-//        Toast.makeText(getActivity(), sharedPreferences.getString("k", ""), Toast.LENGTH_SHORT).show();
-//        preferences = new AppPreferences(getActivity());
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("New Sales");
         mnew_progress = view.findViewById(R.id.new_progress);
         CNlist = new ArrayList<String>();
         view_cart = (ImageView)view. findViewById(R.id.view_cart);
@@ -142,21 +139,6 @@ public class NewSalesActivity extends Fragment {
         ordertaken.setAdapter(stringArrayAdapter);
         gtotal = (TextView)view. findViewById(R.id.gtotal);
         gTotalAmt = 0;
-//        back_to_sale.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new_sale_form.setVisibility(View.VISIBLE);
-//                cart_view_form.setVisibility(View.GONE);
-//            }
-//        });
-//        if (sharedPreferences.getString("k", "").equals("YES")) {
-//            radion.setEnabled(false);
-//        } else if (sharedPreferences.getString("k", "").equals("NO")) {
-//            radios.setEnabled(false);
-//        } else {
-//            radion.setEnabled(true);
-//            radion.setEnabled(true);
-//        }
         new_sale_form = (LinearLayout) view.findViewById(R.id.new_sale_form);
         cart_view_form = (LinearLayout) view.findViewById(R.id.cart_view_form);
         lv_cart = (ListView)view. findViewById(R.id.lv_cart);
@@ -166,21 +148,14 @@ public class NewSalesActivity extends Fragment {
                         new SwipeDismissListViewTouchListener.DismissCallbacks() {
                             @Override
                             public boolean canDismiss(int position) {
-                                /*String dArea = String.valueOf(lv_area.getItemAtPosition(position));
-                                String msg = "Are you sure you want to Delete \""+dArea+"\" Area";
-                                boolean isReturn = showConfirmDialog(msg);
-                                return isReturn;*/
                                 return true;
                             }
 
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    //String dcust = String.valueOf(lv_cart.getItemAtPosition(position));
                                     String msg = "Are you sure you want to Delete Item from Cart";
                                     showConfirmDialog(msg, position);
-                                    /*areasarraylist.remove(position);
-                                    area_adapter.notifyDataSetChanged();*/
                                 }
                             }
                         });
@@ -191,8 +166,6 @@ public class NewSalesActivity extends Fragment {
             public void onClick(View view) {
                 try {
                     showProgress(true);
-//                    editor.putString("k", "Fine");
-//                    editor.commit();
                     jsObjArray = new ArrayList<>();
                     jsObjArray.clear();
                     ObjectMapper mapperObj;//= new ObjectMapper();
@@ -280,14 +253,13 @@ public class NewSalesActivity extends Fragment {
                 int selectedId = radioGst.getCheckedRadioButtonId();
                 selectedRadioBtn = (RadioButton) view.findViewById(selectedId);
                 gstYn = selectedRadioBtn.getText().toString().trim();
+                Toast.makeText(getActivity(), gstYn, Toast.LENGTH_SHORT).show();
                 if (gstYn.equals("YES")) {
                     radion.setEnabled(false);
-//                    editor.putString("k", "YES");
-//                    editor.commit();
+
                 } else {
                     radios.setEnabled(false);
-//                    editor.putString("k", "NO");
-//                    editor.commit();
+
 
                 }
                 if (qus.length() > 0 && prs.length() > 0) {
@@ -322,8 +294,6 @@ public class NewSalesActivity extends Fragment {
             public void onClick(View view) {
                 int selectedId = radioGst.getCheckedRadioButtonId();
                 selectedRadioBtn = (RadioButton) view.findViewById(selectedId);
-                gstYn = selectedRadioBtn.getText().toString().trim();
-                // find the radiobutton by returned id
                 CartBean cartBean = new CartBean();
                 cart_count = (TextView) view.findViewById(R.id.cart_count);
                 cmName = company_name_spinner.getSelectedItem().toString().trim();
@@ -350,23 +320,9 @@ public class NewSalesActivity extends Fragment {
                 amountEt.setText("");
                 amountGst.setText("");
                 amountTotal.setText("");
-                cartCount++;
-                cart_count.setText("" + cartCount);
-            }
-        });
-        view_cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                cart_adapter= new CartAdapter(AppConfigClass.cardBeanAl,getApplicationContext());
-                if (cart_count.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Cart is Empty", Toast.LENGTH_SHORT).show();
-                } else {
-                    setGtotalAmt();
-                    cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
-                    lv_cart.setAdapter(cart_adapter_new);
-                    new_sale_form.setVisibility(View.GONE);
-                    cart_view_form.setVisibility(View.VISIBLE);
-                }
+                setGtotalAmt();
+                cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
+                lv_cart.setAdapter(cart_adapter_new);
             }
         });
         mGetCategoryTask = new GetCategoryTask();
