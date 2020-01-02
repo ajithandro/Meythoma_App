@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,24 +26,28 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 public class Today_Payment extends Fragment {
     View view;
     SwipeRefreshLayout swipeRefreshLayout;
     private int mYear, mMonth, mDay;
     ProgressDialog progressDialog;
     Button paygst, paynongst;
-    ArrayList order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance;
-    StringBuilder stringproduct, stringvol, stringrate, totalstring;
-    float sumproduct, gstval, sumtotal = 0;
+    ArrayList paytotal, order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance, paysno, paydate, payamount;
+    StringBuilder stringproduct, stringvol, stringrate, totalstring, strsno, strdate, stramt;
+    float sumproduct, gstval, sumtotal ;
     RecyclerView recyclerViewpay;
     LinearLayout paylin;
     EditText orderdateinput;
     String strDate, ordsts;
+    String[] splitproduct;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class Today_Payment extends Fragment {
         paylin.setVisibility(View.INVISIBLE);
         recyclerViewpay = (RecyclerView) view.findViewById(R.id.payorder);
         orderdateinput = (EditText) view.findViewById(R.id.orderdateinput);
-        swipeRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipepay);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipepay);
         orderdateinput.requestFocus();
         orderdateinput.setShowSoftInputOnFocus(false);
         declarearrays();
@@ -105,6 +110,7 @@ public class Today_Payment extends Fragment {
         });
         return view;
     }
+
     void getpayments(final String type, final String strDate) {
         showprogress();
         cleararrays();
@@ -131,7 +137,7 @@ public class Today_Payment extends Fragment {
                         }
                         paybalance.add(obj.getString("balanceAmount"));
                         billno.add(obj.getString("billNumber"));
-                        String productarray = obj.getString("GROUP_CONCAT(DISTINCT pc.name, ': ',opd.amount, ': ', opd.product_volume_kg SEPARATOR ', ')");
+                        String productarray = obj.getString("products");
                         if (productarray.contains(",")) {
                             stringproduct = new StringBuilder();
                             stringvol = new StringBuilder();
@@ -145,18 +151,18 @@ public class Today_Payment extends Fragment {
                                 sumproduct = Float.parseFloat(splitproduct[1]) * Float.parseFloat(splitproduct[2]);
                                 sumtotal = sumtotal + sumproduct;
                             }
+
                             if (obj.getString("is_tax").equals("1")) {
                                 gstval = (sumtotal * 5) / 100;
                                 gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumtotal + gstval;
-
-                               // totalamt.add(String.valueOf(sum));
+                                paytotal.add(String.valueOf(sum));
                             } else {
                                 gstamt.add("0 (No)");
+                                paytotal.add(String.valueOf(sumtotal));
 
-                               // totalamt.add(String.valueOf(sumtotal));
                             }
-                            sumtotal = 0;
+                            sumtotal=0;
                             productDetails.add(stringproduct.toString());
                             kgdetails.add(stringvol.toString());
                             totalAmount.add(stringrate.toString());
@@ -174,12 +180,12 @@ public class Today_Payment extends Fragment {
                                 gstval = (sumproduct * 5) / 100;
                                 gstamt.add(String.valueOf(gstval) + " (yes)");
                                 float sum = sumproduct + gstval;
-                                //totalamt.add(obj.getString("paidAmount"));
-                               // totalamt.add(String.valueOf(sum));
-                            } else {
+                                paytotal.add(String.valueOf(sum));
+                            } else { //totalamt.add(obj.getString("paidAmount"));
+                                // totalamt.add(String.valueOf(sum));
                                 gstamt.add("0 (No)");
-                               // totalamt.add(String.valueOf(sumproduct));
-                                //totalamt.add(obj.getString("paidAmount"));
+                                paytotal.add(String.valueOf(sumproduct));
+
                             }
                             productDetails.add(stringproduct.toString());
                             kgdetails.add(stringvol.toString());
@@ -187,16 +193,7 @@ public class Today_Payment extends Fragment {
                         }
 
                     }
-                    try {
-                        JSONObject jsonObject2 = new JSONObject(response);
-                        JSONArray jsonArray2 = jsonObject2.getJSONArray("project_details1");
-                        for (int i = 0; i < jsonArray2.length(); i++) {
-                            JSONObject obj1 = jsonArray1.getJSONObject(i);
-                            Log.d("Kalil",obj1.getString("GROUP_CONCAT(DISTINCT chequeDate, ': ', paidAmount SEPARATOR ', ')"));
-                    }
-                    }catch (Exception e){
 
-                    }displaydata();
 
                     progressDialog.dismiss();
                     swipeRefreshLayout.setRefreshing(false);
@@ -214,7 +211,58 @@ public class Today_Payment extends Fragment {
                 } catch (Exception e) {
 
                 }
+                try {
+                    JSONObject jsonObject2 = new JSONObject(response);
+                    JSONArray jsonArray2 = jsonObject2.getJSONArray("project_details1");
+                    for (int i = 0; i < jsonArray2.length(); i++) {
+                        JSONObject obj1 = jsonArray2.getJSONObject(i);
 
+
+                        Log.d("Kalil", obj1.getString("GROUP_CONCAT(DISTINCT DATE_FORMAT(chequeDate, '%y-%m-%d'), ': ', paidAmount SEPARATOR ', ')"));
+                        String productarray = obj1.getString("GROUP_CONCAT(DISTINCT DATE_FORMAT(chequeDate, '%y-%m-%d'), ': ', paidAmount SEPARATOR ', ')");
+
+                        if (productarray.contains(",")) {
+                            strsno = new StringBuilder();
+                            strdate = new StringBuilder();
+                            stramt = new StringBuilder();
+                            String[] prod = productarray.split(",");
+                            for (int k = 0; k < prod.length; k++) {
+                                splitproduct = prod[k].split(":");
+
+                                        strdate.append("\n" + splitproduct[0].trim());
+                                stramt.append("\n" + splitproduct[1].trim());
+
+                            }
+                            for (int o=1;o<=splitproduct.length;o++) {
+                                strsno.append("\n" + String.valueOf(o));
+                            }
+                            paysno.add(strsno.toString());
+                            paydate.add(strdate.toString());
+                            payamount.add(stramt.toString());
+
+
+                        } else {
+                            strsno = new StringBuilder();
+                            strdate = new StringBuilder();
+                            stramt = new StringBuilder();
+                           splitproduct = productarray.split(":");
+
+                            strdate.append("\n" + splitproduct[0].trim());
+                            stramt.append("\n" + splitproduct[1].trim());
+                            for (int o=1;o<splitproduct.length;o++) {
+                                strsno.append("\n" + String.valueOf(o));
+                            }
+                            paysno.add(strsno.toString());
+                            paydate.add(strdate.toString());
+                            payamount.add(stramt.toString());
+                        }
+
+
+                    }
+                } catch (Exception e) {
+
+                }
+                displaydata();
 
             }
         }, new Response.ErrorListener() {
@@ -247,6 +295,10 @@ public class Today_Payment extends Fragment {
         orderstatus = new ArrayList();
         paymentstatus = new ArrayList();
         paybalance = new ArrayList();
+        paysno = new ArrayList();
+        paydate = new ArrayList();
+        payamount = new ArrayList();
+        paytotal = new ArrayList();
     }
 
     void showprogress() {
@@ -255,7 +307,8 @@ public class Today_Payment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
-    void cleararrays(){
+
+    void cleararrays() {
         orderDate.clear();
         order_id.clear();
         deliveryDate.clear();
@@ -271,13 +324,18 @@ public class Today_Payment extends Fragment {
         kgdetails.clear();
         paymentstatus.clear();
         paybalance.clear();
+        paysno.clear();
+        paydate.clear();
+        payamount.clear();
+        paytotal.clear();
     }
-    void displaydata(){
+
+    void displaydata() {
         LinearLayoutManager linearLayoutManagertwo = new LinearLayoutManager(getActivity());
         recyclerViewpay.setLayoutManager(linearLayoutManagertwo);
-        OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance);
-        ordersAdapter.notifyDataSetChanged();
-        recyclerViewpay.setAdapter(ordersAdapter);
+        PaymentAdapter paymentAdapter = new PaymentAdapter(getActivity(), order_id, buyerad, orderDate, deliveryDate, billno, companyName, productDetails, totalAmount, gstamt, ordertakenby, totalamt, kgdetails, orderstatus, paymentstatus, paybalance, paysno, paydate, payamount, paytotal);
+        paymentAdapter.notifyDataSetChanged();
+        recyclerViewpay.setAdapter(paymentAdapter);
     }
 
 
