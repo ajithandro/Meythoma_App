@@ -35,6 +35,7 @@ public class AppConfigClass {
     public static String shoporders = serverName+AppName+"/shoporders.php";
     public static String payments = serverName+AppName+"/paymentDetails.php";
     public static String updatestatusurl = serverName+AppName+"/updateorder.php";
+    public static String todaydelivered = serverName+AppName+"/todaydelivered.php";
 
 
 }

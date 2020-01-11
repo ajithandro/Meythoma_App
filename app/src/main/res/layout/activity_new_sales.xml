@@ -38,13 +38,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold"
+            android:layout_marginTop="5dp"
             android:textSize="18sp"
             android:text="product Information" />
 
         <ScrollView
             android:id="@+id/add_cust_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -143,6 +145,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/buttondesign"
                         android:inputType="number"
+                        android:hint="0"
                         android:padding="5dp"
                         android:singleLine="true" />
                 </LinearLayout>
@@ -164,6 +167,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/buttondesign"
                         android:inputType="number"
+                        android:hint="0"
                         android:padding="5dp"
                         android:singleLine="true" />
                 </LinearLayout>

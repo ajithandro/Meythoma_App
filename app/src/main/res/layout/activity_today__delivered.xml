@@ -58,7 +58,7 @@
                 android:id="@+id/deliveredorder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/lin9"
+                android:layout_above="@+id/lin11"
                 android:layout_below="@+id/orderdeliverd"
                 android:layout_marginTop="2dp">
 

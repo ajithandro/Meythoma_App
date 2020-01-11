@@ -96,6 +96,7 @@ public class NewSalesActivity extends Fragment {
     String gst;
     String comments;
     View view;
+    LinearLayout getNew_sale_form;
 
     @Nullable
     @Override
@@ -103,8 +104,10 @@ public class NewSalesActivity extends Fragment {
         view = inflater.inflate(R.layout.activity_new_sales, container, false);
         conx = this;
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("New Sales");
+        getNew_sale_form=(LinearLayout)view.findViewById(R.id.new_sale_form);
         mnew_progress = view.findViewById(R.id.new_progress);
         CNlist = new ArrayList<String>();
+        getNew_sale_form.setEnabled(true);
         view_cart = (ImageView)view. findViewById(R.id.view_cart);
         cart_count = (TextView) view.findViewById(R.id.cart_count);
         radios = (RadioButton) view.findViewById(R.id.radioSgst);
@@ -115,7 +118,7 @@ public class NewSalesActivity extends Fragment {
         bill = (EditText)view. findViewById(R.id.billno);
         ordertaken = (Spinner)view. findViewById(R.id.ordertaken);
         billno = bill.getText().toString();
-        String[] ordtak = {"-Order By-", "Hussian", "SivaPrkash", "Gowtham", "Vaisul", "Ganesh", "Seenu"};
+        String[] ordtak = {"-Order By-", "Hussian", "SivaPrakash", "Gowtham", "Vaisul", "Ganesh", "Seenu"};
         final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ordtak) {
             @NonNull
             @Override
@@ -165,7 +168,6 @@ public class NewSalesActivity extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    showProgress(true);
                     jsObjArray = new ArrayList<>();
                     jsObjArray.clear();
                     ObjectMapper mapperObj;//= new ObjectMapper();
@@ -174,8 +176,9 @@ public class NewSalesActivity extends Fragment {
                         String jsonStr = mapperObj.writeValueAsString(cbObj);
                         jsObjArray.add(jsonStr);
                     }
-                    salesperson = preferences.getStringPreference(getActivity(), Constants.PREFERENCES_SALESPERSON_ID);
-                    username = preferences.getStringPreference(getActivity(), Constants.PREFERENCES_SALESPERSON_NAME);
+                    salesperson = "1";
+                    username = "hussain";
+                    Log.d("jsonStringresponse",salesperson+username);
                     String visitedCompany = company_name_spinner.getSelectedItem().toString().trim();
                     ordby = ordertaken.getSelectedItem().toString().trim();
                     int companyIndex = Constants.customerListAl.indexOf(visitedCompany);
@@ -185,16 +188,10 @@ public class NewSalesActivity extends Fragment {
                     gst = gstYn;
                     Toast.makeText(getActivity(), customer_id, Toast.LENGTH_SHORT).show();
                     Log.e("***********************", jsObjArray.toString());
-                   // postnewsaletoserver();
+                    postnewsaletoserver();
                     in_date.setText("");
                     bill.setText("");
                     et_comments.setText("");
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            back_to_sale.performClick();
-                        }
-                    }, 2000);
 
                 } catch (Exception e) {
                 }
@@ -210,8 +207,6 @@ public class NewSalesActivity extends Fragment {
         amountEt.setEnabled(false);
         amountGst.setEnabled(false);
         amountTotal.setEnabled(false);
-        quantity.setText("0");
-        price_kg.setText("0");
         amountEt.setText("0");
         amountGst.setText("0");
         amountTotal.setText("0");
@@ -313,8 +308,8 @@ public class NewSalesActivity extends Fragment {
                 cartBean.setAmounttot(amount);
                 cartBean.setGstamt(sgst);
                 cartBean.setTotalamt(samountTotal);
+                Log.d("cartbeanproducts",proTyp);
                 AppConfigClass.cardBeanAl.add(cartBean);
-                showToast("Item added into cart successfully");
                 quantity.setText("");
                 price_kg.setText("");
                 amountEt.setText("");
@@ -456,6 +451,7 @@ public class NewSalesActivity extends Fragment {
             }
 
             showProgress(false);
+            getNew_sale_form.setEnabled(true);
 
         }
 
@@ -463,6 +459,7 @@ public class NewSalesActivity extends Fragment {
         protected void onCancelled() {
             mGetCategoryTask = null;
             showProgress(false);
+
         }
     }
 
@@ -555,14 +552,15 @@ public class NewSalesActivity extends Fragment {
 
     void postnewsaletoserver() {
         showProgress(true);
-        Log.d("retrivedatafromserver", "TestingResponse");
-        String path = "all_arraylist=" + jsObjArray.toString() + "&username=" + ordby + "&customer_id=" + customer_id + "&delivery_date=" + delivery_date + "&salesperson=" + salesperson + "&gst=" + gst + "&bno=" + billno + "&orby=" + ordby + "&comments=" + comments;
+        Toast.makeText(getActivity(), "working fine", Toast.LENGTH_SHORT).show();
+//        String path = "all_arraylist=" + jsObjArray.toString() + "&username=" + ordby + "&customer_id=" + customer_id + "&delivery_date=" + delivery_date + "&salesperson=" + salesperson + "&gst=" + gst + "&bno=" + billno + "&orby=" + ordby + "&comments=" + comments;
+//        Log.d("retrivedatafromserver", path);
         StringRequest request = new StringRequest(Request.Method.POST, AppConfigClass.newSalesEntryURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 showProgress(false);
                 Toast.makeText(getActivity(), s.toString(), Toast.LENGTH_LONG).show();
-                Log.d("retrivedatafromserver", s);
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -582,6 +580,7 @@ public class NewSalesActivity extends Fragment {
                 params.put("bno", billno);
                 params.put("orby", ordby);
                 params.put("comments", comments);
+                Log.d("paramsdata",params.toString());
                 return params;
             }
         };

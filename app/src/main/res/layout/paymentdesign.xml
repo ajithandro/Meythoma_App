@@ -247,7 +247,7 @@
 
                         <TextView
                             android:id="@+id/paysno"
-                            android:layout_width="1dp"
+                            android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginLeft="10dp"
@@ -261,7 +261,7 @@
 
                         <TextView
                             android:id="@+id/paydatepartial"
-                            android:layout_width="125dp"
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_gravity="center_vertical"
@@ -276,7 +276,7 @@
 
                         <TextView
                             android:id="@+id/payamtpartial"
-                            android:layout_width="125dp"
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_gravity="right"
