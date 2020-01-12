@@ -10,10 +10,10 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +64,7 @@ public class NewSalesActivity extends Fragment {
     private GetCategoryTask mGetCategoryTask = null;
     EditText quantity, price_kg, amountEt, amountGst, amountTotal, in_date, et_comments, bill;
     Spinner company_name_spinner, product_type_spinner, ordertaken;
-    Button add_cart_btn, order_submit_btn, back_to_sale;
+    Button add_cart_btn, order_submit_btn;
     ImageView view_cart;
     TextView cart_count, gtotal;
     static NewSalesActivity conx;
@@ -104,19 +104,19 @@ public class NewSalesActivity extends Fragment {
         view = inflater.inflate(R.layout.activity_new_sales, container, false);
         conx = this;
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("New Sales");
-        getNew_sale_form=(LinearLayout)view.findViewById(R.id.new_sale_form);
+        getNew_sale_form = (LinearLayout) view.findViewById(R.id.new_sale_form);
         mnew_progress = view.findViewById(R.id.new_progress);
         CNlist = new ArrayList<String>();
         getNew_sale_form.setEnabled(true);
-        view_cart = (ImageView)view. findViewById(R.id.view_cart);
+        view_cart = (ImageView) view.findViewById(R.id.view_cart);
         cart_count = (TextView) view.findViewById(R.id.cart_count);
         radios = (RadioButton) view.findViewById(R.id.radioSgst);
         radion = (RadioButton) view.findViewById(R.id.radioNgst);
         company_name_spinner = (Spinner) view.findViewById(R.id.company_name_spinner);
-        product_type_spinner = (Spinner)view. findViewById(R.id.product_type_spinner);
-        order_submit_btn = (Button)view. findViewById(R.id.order_submit_btn);
-        bill = (EditText)view. findViewById(R.id.billno);
-        ordertaken = (Spinner)view. findViewById(R.id.ordertaken);
+        product_type_spinner = (Spinner) view.findViewById(R.id.product_type_spinner);
+        order_submit_btn = (Button) view.findViewById(R.id.order_submit_btn);
+        bill = (EditText) view.findViewById(R.id.billno);
+        ordertaken = (Spinner) view.findViewById(R.id.ordertaken);
         billno = bill.getText().toString();
         String[] ordtak = {"-Order By-", "Hussian", "SivaPrakash", "Gowtham", "Vaisul", "Ganesh", "Seenu"};
         final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ordtak) {
@@ -140,11 +140,11 @@ public class NewSalesActivity extends Fragment {
 
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ordertaken.setAdapter(stringArrayAdapter);
-        gtotal = (TextView)view. findViewById(R.id.gtotal);
+        gtotal = (TextView) view.findViewById(R.id.gtotal);
         gTotalAmt = 0;
         new_sale_form = (LinearLayout) view.findViewById(R.id.new_sale_form);
         cart_view_form = (LinearLayout) view.findViewById(R.id.cart_view_form);
-        lv_cart = (ListView)view. findViewById(R.id.lv_cart);
+        lv_cart = (ListView) view.findViewById(R.id.lv_cart);
         SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
                         lv_cart,
@@ -178,7 +178,7 @@ public class NewSalesActivity extends Fragment {
                     }
                     salesperson = "1";
                     username = "hussain";
-                    Log.d("jsonStringresponse",salesperson+username);
+                    Log.d("jsonStringresponse", salesperson + username);
                     String visitedCompany = company_name_spinner.getSelectedItem().toString().trim();
                     ordby = ordertaken.getSelectedItem().toString().trim();
                     int companyIndex = Constants.customerListAl.indexOf(visitedCompany);
@@ -188,22 +188,34 @@ public class NewSalesActivity extends Fragment {
                     gst = gstYn;
                     Toast.makeText(getActivity(), customer_id, Toast.LENGTH_SHORT).show();
                     Log.e("***********************", jsObjArray.toString());
-                    postnewsaletoserver();
-                    in_date.setText("");
-                    bill.setText("");
-                    et_comments.setText("");
+                    if (delivery_date.isEmpty() && ordby.equals("-Order By-")) {
+                        showtoastmsg("Enter Delivery date and comments");
+                    } else if (delivery_date.isEmpty()) {
+                        in_date.setError("Select Delivery Date");
+                    } else if (ordby.equals("-Order By-")) {
+                        showtoastmsg("select Orderby Field");
+                    } else {
+                        postnewsaletoserver();
+                        in_date.setText("");
+                        bill.setText("");
+                        et_comments.setText("");
+                        setGtotalAmt();
+                        AppConfigClass.cardBeanAl.clear();
+                        cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
+                        lv_cart.setAdapter(cart_adapter_new);
 
+                    }
                 } catch (Exception e) {
                 }
             }
         });
         radioGst = (RadioGroup) view.findViewById(R.id.radioGst);
-        quantity = (EditText)view. findViewById(R.id.quantity);
+        quantity = (EditText) view.findViewById(R.id.quantity);
         price_kg = (EditText) view.findViewById(R.id.price_kg);
         amountEt = (EditText) view.findViewById(R.id.amountEt);
         amountGst = (EditText) view.findViewById(R.id.amountGst);
         amountTotal = (EditText) view.findViewById(R.id.amountTotal);
-        et_comments = (EditText)view. findViewById(R.id.et_comments);
+        et_comments = (EditText) view.findViewById(R.id.et_comments);
         amountEt.setEnabled(false);
         amountGst.setEnabled(false);
         amountTotal.setEnabled(false);
@@ -308,16 +320,28 @@ public class NewSalesActivity extends Fragment {
                 cartBean.setAmounttot(amount);
                 cartBean.setGstamt(sgst);
                 cartBean.setTotalamt(samountTotal);
-                Log.d("cartbeanproducts",proTyp);
+                Log.d("cartbeanproducts", proTyp + cmName);
                 AppConfigClass.cardBeanAl.add(cartBean);
-                quantity.setText("");
-                price_kg.setText("");
-                amountEt.setText("");
-                amountGst.setText("");
-                amountTotal.setText("");
-                setGtotalAmt();
-                cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
-                lv_cart.setAdapter(cart_adapter_new);
+                if (quantity.getText().toString().isEmpty() && price_kg.getText().toString().isEmpty()) {
+                    showtoastmsg("Please enter all the fields");
+                } else if (cmName.equals("-Select-")) {
+                    showtoastmsg("Select any Company Type");
+                } else if (proTyp.equals("13")) {
+                    showtoastmsg("Select any Product");
+                } else if (quantity.getText().toString().isEmpty()) {
+                    quantity.setError("Enter quantity");
+                } else if (price_kg.getText().toString().isEmpty()) {
+                    price_kg.setError("Enter price per/Kg");
+                } else {
+                    setGtotalAmt();
+                    cart_adapter_new = new CartAdapterNew(getActivity(), AppConfigClass.cardBeanAl);
+                    lv_cart.setAdapter(cart_adapter_new);
+                    quantity.setText("");
+                    price_kg.setText("");
+                    amountEt.setText("");
+                    amountGst.setText("");
+                    amountTotal.setText("");
+                }
             }
         });
         mGetCategoryTask = new GetCategoryTask();
@@ -488,9 +512,6 @@ public class NewSalesActivity extends Fragment {
         }
     }
 
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-    }
 
     public TextView conf_tv;
     public Dialog conf_dialog;
@@ -559,7 +580,7 @@ public class NewSalesActivity extends Fragment {
             @Override
             public void onResponse(String s) {
                 showProgress(false);
-                Toast.makeText(getActivity(), s.toString(), Toast.LENGTH_LONG).show();
+                orderconfirmation();
 
             }
         }, new Response.ErrorListener() {
@@ -580,7 +601,7 @@ public class NewSalesActivity extends Fragment {
                 params.put("bno", billno);
                 params.put("orby", ordby);
                 params.put("comments", comments);
-                Log.d("paramsdata",params.toString());
+                Log.d("paramsdata", params.toString());
                 return params;
             }
         };
@@ -588,6 +609,33 @@ public class NewSalesActivity extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(request);
 
+
+    }
+
+    void showtoastmsg(String msg) {
+        Toast toast = Toast.makeText(getActivity(), msg + "...!!", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 250);
+        toast.show();
+        ViewGroup group = (ViewGroup) toast.getView();
+        TextView messageTextView = (TextView) group.getChildAt(0);
+        messageTextView.setTextSize(16);
+        messageTextView.setTextColor(Color.BLACK);
+        messageTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+    }
+
+    void orderconfirmation() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.orderconfirmation);
+        dialog.setCancelable(false);
+        dialog.setTitle("Title...");
+        Button btpay = (Button) dialog.findViewById(R.id.doneorder);
+        btpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
 
     }
 
