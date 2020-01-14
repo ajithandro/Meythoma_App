@@ -424,17 +424,17 @@ public class Today_Payment extends Fragment {
                 p6.setColspan(5);
                 p6.setFixedHeight(20f);
                 table.addCell(p6);
-                PdfPCell p7 = new PdfPCell(new Phrase(String.valueOf(totalamt.get(k)), FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));
-                p7.setColspan(2);
-                p7.setHorizontalAlignment(Element.ALIGN_CENTER);
-                p7.setFixedHeight(20f);
-                table.addCell(p7);
-                PdfPCell p8 = new PdfPCell(new Phrase(String.valueOf(paytotal.get(L)), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+                PdfPCell p8 = new PdfPCell(new Phrase(String.valueOf(paytotal.get(k)), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
                 p8.setColspan(2);
                 p8.setFixedHeight(20f);
                 p8.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(p8);
-                double payt=Double.parseDouble(paytotal.get(L).toString());
+                PdfPCell p7 = new PdfPCell(new Phrase(String.valueOf(totalamt.get(L)), FontFactory.getFont(FontFactory.TIMES_BOLD, 12, BaseColor.BLACK)));
+                p7.setColspan(2);
+                p7.setHorizontalAlignment(Element.ALIGN_CENTER);
+                p7.setFixedHeight(20f);
+                table.addCell(p7);
+                double payt=Double.parseDouble(totalamt.get(L).toString());
                 todaypaid = todaypaid + payt;
             }
             PdfPCell p9 = new PdfPCell(new Phrase("", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, BaseColor.BLACK)));

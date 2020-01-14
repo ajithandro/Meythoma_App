@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import pl.droidsonroids.gif.GifImageView;
 public class Splash extends AppCompatActivity {
-    TextView textView;
+   LinearLayout layout;
     GifImageView gifImageView;
     SQLiteDatabase db;
     EditText usered, passed;
@@ -33,7 +34,7 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        textView = (TextView) findViewById(R.id.handle);
+        layout = (LinearLayout) findViewById(R.id.layo);
         gifImageView = (GifImageView) findViewById(R.id.gif);
         usered = (EditText) findViewById(R.id.usered);
         passed = (EditText) findViewById(R.id.passed);
@@ -53,7 +54,7 @@ public class Splash extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    textView.performClick();
+                   layout.setVisibility(View.VISIBLE);
                     gifImageView.setVisibility(View.INVISIBLE);
                 }
             }, 2000);
